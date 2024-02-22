@@ -1,10 +1,11 @@
-﻿using BigDaddyCryptoPortfolio.Contracts.ViewModels;
+﻿using BigDaddyCryptoPortfolio.Contracts.AppControls;
+using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Views;
 using System.Collections.Specialized;
 
 namespace BigDaddyCryptoPortfolio
 {
-	public partial class App : Application
+	public partial class App : Application, IAppUiControl
 	{
 		public App(ICoinsViewModel coinsViewModel)
 		{
@@ -14,7 +15,7 @@ namespace BigDaddyCryptoPortfolio
 			{
 				Title = "Coins",
 				Route = "CoinsView",
-				ContentTemplate = new DataTemplate(() => new CoinsView(coinsViewModel))
+				ContentTemplate = new DataTemplate(() => new CoinsView(coinsViewModel, this))
 			});
 
 
@@ -33,6 +34,11 @@ namespace BigDaddyCryptoPortfolio
 				ContentTemplate = new DataTemplate(() => new EvaluationView())
 			});
 
+		}
+
+		public void AddTab(string tabName)
+		{
+			throw new NotImplementedException();
 		}
 
 		private async void OnCollectionChanged(object? sender, NotifyCollectionChangedAction e)
