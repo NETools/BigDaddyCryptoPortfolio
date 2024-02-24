@@ -12,6 +12,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -19,7 +20,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Picker x:Name="picker"
+        <Picker x:Name="Picker"
                 Title="Select a category"
                 SelectedIndexChanged="PickerSelectedIndexChanged"
                 >
@@ -39,87 +40,95 @@
             </Picker.ItemsSource>
         </Picker>
 
-        <ListView 
+        <CollectionView 
             Grid.Row="1"
             x:Name="ListView" 
             ItemsSource="{Binding Coins}"
-            ItemSelected="ListView_ItemSelected"
+            SelectionChanged="ListView_SelectionChanged"
             SelectionMode="Single"
-            HasUnevenRows="True"
-            Scrolled="ListView_Scrolled">
-            <ListView.ItemTemplate>
+            MaximumHeightRequest="400">
+
+            <CollectionView.Background>
+                <LinearGradientBrush StartPoint="0,0">
+                    <GradientStop Color="DarkGray"
+                     Offset="0.0" />
+                    <GradientStop Color="Black"
+                     Offset="1.0" />
+                </LinearGradientBrush>
+            </CollectionView.Background>
+
+            <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
-                        <SwipeView FlowDirection="MatchParent">
-                            <SwipeView.Triggers>
-                                <DataTrigger TargetType="SwipeView">
-                                    <DataTrigger.Binding>
-                                        <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
-                                            <Binding Path="IsInPortfolio" />
-                                            <Binding Path="IsSelected" />
-                                        </MultiBinding>
-                                    </DataTrigger.Binding>
-                                    
-                                    <DataTrigger.Value>
-                                        <x:Boolean>True</x:Boolean>
-                                    </DataTrigger.Value>
+                    <SwipeView FlowDirection="MatchParent">
+                        <SwipeView.Triggers>
+                            <DataTrigger TargetType="SwipeView">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
+                                        <Binding Path="IsInPortfolio" />
+                                        <Binding Path="IsSelected" />
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
 
-                                    <Setter Property="LeftItems">
-                                        <Setter.Value>
-                                            <SwipeItems>
-                                                <SwipeItem Text="Delete" Invoked="DeleteInvoked"/>
-                                            </SwipeItems>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
+                                <DataTrigger.Value>
+                                    <x:Boolean>True</x:Boolean>
+                                </DataTrigger.Value>
 
-                                <DataTrigger TargetType="SwipeView">
-                                    <DataTrigger.Binding>
-                                        <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
-                                            <Binding Path="IsNotInPortfolio" />
-                                            <Binding Path="IsSelected" />
-                                        </MultiBinding>
-                                    </DataTrigger.Binding>
+                                <Setter Property="LeftItems">
+                                    <Setter.Value>
+                                        <SwipeItems>
+                                            <SwipeItem Text="Delete" Invoked="DeleteInvoked"/>
+                                        </SwipeItems>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
 
-                                    <DataTrigger.Value>
-                                        <x:Boolean>True</x:Boolean>
-                                    </DataTrigger.Value>
+                            <DataTrigger TargetType="SwipeView">
+                                <DataTrigger.Binding>
+                                    <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
+                                        <Binding Path="IsNotInPortfolio" />
+                                        <Binding Path="IsSelected" />
+                                    </MultiBinding>
+                                </DataTrigger.Binding>
 
-                                    <Setter Property="RightItems">
-                                        <Setter.Value>
-                                            <SwipeItems>
-                                                <SwipeItem Text="Add" Invoked="AddInvoked" IsVisible="{Binding IsSelected, Converter={StaticResource NullConverter}}"/>
-                                            </SwipeItems>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                            </SwipeView.Triggers>
+                                <DataTrigger.Value>
+                                    <x:Boolean>True</x:Boolean>
+                                </DataTrigger.Value>
 
-                            <Grid
+                                <Setter Property="RightItems">
+                                    <Setter.Value>
+                                        <SwipeItems>
+                                            <SwipeItem Text="Add" Invoked="AddInvoked" IsVisible="{Binding IsSelected, Converter={StaticResource NullConverter}}"/>
+                                        </SwipeItems>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </SwipeView.Triggers>
+
+                        <Grid
                                 RowDefinitions="Auto, Auto"
                                 ColumnDefinitions="Auto, Auto">
-                                <Image
+                            <Image
                                     Grid.RowSpan="2"
                                     Aspect="AspectFill"
                                     WidthRequest="60"
                                     HeightRequest="60"
                                     Margin="5, 0, 0, 0"
                                     Source="{Binding IconSource}"/>
-                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" Padding="10, 10, 0, 0" Grid.Column="1">
-                                    <Label
+                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" Padding="10, 10, 0, 0" Grid.Column="1">
+                                <Label
                                         Text="{Binding Name}"
                                         FontAttributes="Bold"/>
-                                    <Label
+                                <Label
                                         Grid.Row="1"
                                         Text="{Binding Symbol}"/>
-                                    <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{Binding IsInPortfolio, StringFormat='Is added: {0}'}" Margin="10" VerticalTextAlignment="Center"/>
-                                </Grid>
+                                <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{Binding IsInPortfolio, StringFormat='Is added: {0}'}" Margin="10" VerticalTextAlignment="Center"/>
                             </Grid>
-                        </SwipeView>
-                    </ViewCell>
+                        </Grid>
+                    </SwipeView>
+
                 </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
         <ScrollView Grid.Row="2">
             <Grid RowDefinitions="Auto,Auto" Margin="10" >

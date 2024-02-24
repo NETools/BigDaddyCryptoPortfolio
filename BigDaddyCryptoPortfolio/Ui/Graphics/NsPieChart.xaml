@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BigDaddyCryptoPortfolio.Ui.Graphics.NsPieChart">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             x:Class="BigDaddyCryptoPortfolio.Ui.Graphics.NsPieChart"
+             xmlns:Drawable="clr-namespace:BigDaddyCryptoPortfolio.Adapters.Drawables">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Drawable:EllipseDrawable x:Key="Ellipse"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    
+    <Grid>
+        <GraphicsView 
+            x:Name="Canvas" 
+            Drawable="{StaticResource Ellipse}">
+            <GraphicsView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
+            </GraphicsView.GestureRecognizers>
+        </GraphicsView>
+    </Grid>
 </ContentView>
