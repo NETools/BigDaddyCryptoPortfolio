@@ -63,7 +63,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Ui\Graphics\NsPieChart.xaml">
+	  <MauiXaml Update="Ui\Graphics\Charts\NsPieChart.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Ui\Graphics\Charts\PieChartPiece.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Ui\Graphics\Primitives\NsPolygon.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\CoinsView.xaml">

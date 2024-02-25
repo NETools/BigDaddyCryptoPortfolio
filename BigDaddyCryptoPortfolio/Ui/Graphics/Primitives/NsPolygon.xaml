@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BigDaddyCryptoPortfolio.Ui.Graphics.Primitives.NsPolygon"
+             xmlns:Adapters="clr-namespace:BigDaddyCryptoPortfolio.Adapters.Drawables">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Adapters:PolygonDrawable x:Key="Polygon"/>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <GraphicsView x:Name="Canvas" Drawable="{StaticResource Polygon}"/>
+</ContentView>
