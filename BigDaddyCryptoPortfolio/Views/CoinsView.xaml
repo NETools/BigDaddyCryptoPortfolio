@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BigDaddyCryptoPortfolio.Views.CoinsView"
              xmlns:converters="clr-namespace:BigDaddyCryptoPortfolio.Converters"
-             Title="Coins">
+             Title="Coins"
+             BackgroundColor="#111826"
+             Shell.ForegroundColor="White">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -12,35 +14,51 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Settings" Order="Secondary" Command="{Binding ToolBarSettingsCommand}"/>
+    </ContentPage.ToolbarItems>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Picker x:Name="Picker"
+            <Border Stroke="#202530">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+
+                <Picker x:Name="Picker"
+                HorizontalTextAlignment="Center"    
                 Title="Select a category"
                 SelectedIndexChanged="PickerSelectedIndexChanged"
+                TextColor="White"
+                TitleColor="White"
+                        Margin="10"
                 >
-            <Picker.ItemsSource>
-                <x:Array Type="{x:Type x:String}">
-                    <x:String>AI</x:String>
-                    <x:String>Web3</x:String>
-                    <x:String>Defi</x:String>
-                    <x:String>Green coins</x:String>
-                    <x:String>Gaming/Metaverse</x:String>
-                    <x:String>BTC-associated</x:String>
-                    <x:String>CBDC-Networks</x:String>
-                    <x:String>E-Commerce</x:String>
-                    <x:String>Tokenization/RWA</x:String>
-                    <x:String>No hype</x:String>
-                </x:Array>
-            </Picker.ItemsSource>
-        </Picker>
-
-        <CollectionView 
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>AI</x:String>
+                            <x:String>Web3</x:String>
+                            <x:String>Defi</x:String>
+                            <x:String>Green coins</x:String>
+                            <x:String>Gaming/Metaverse</x:String>
+                            <x:String>BTC-associated</x:String>
+                            <x:String>CBDC-Networks</x:String>
+                            <x:String>E-Commerce</x:String>
+                            <x:String>Tokenization/RWA</x:String>
+                            <x:String>No hype</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </Border>
+            
+            
+            <CollectionView 
             Grid.Row="1"
             x:Name="ListView" 
             ItemsSource="{Binding Coins}"
@@ -48,100 +66,131 @@
             SelectionMode="Single"
             MaximumHeightRequest="400">
 
-            <CollectionView.Background>
-                <LinearGradientBrush StartPoint="0,0">
-                    <GradientStop Color="DarkGray"
+                <CollectionView.Background>
+                    <LinearGradientBrush StartPoint="0,0">
+                        <GradientStop Color="#202530"
                      Offset="0.0" />
-                    <GradientStop Color="Black"
+                        <GradientStop Color="#111826"
                      Offset="1.0" />
-                </LinearGradientBrush>
-            </CollectionView.Background>
+                    </LinearGradientBrush>
+                </CollectionView.Background>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <SwipeView FlowDirection="MatchParent">
-                        <SwipeView.Triggers>
-                            <DataTrigger TargetType="SwipeView">
-                                <DataTrigger.Binding>
-                                    <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
-                                        <Binding Path="IsInPortfolio" />
-                                        <Binding Path="IsSelected" />
-                                    </MultiBinding>
-                                </DataTrigger.Binding>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView FlowDirection="MatchParent">
+                            <SwipeView.Triggers>
+                                <DataTrigger TargetType="SwipeView">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
+                                            <Binding Path="IsInPortfolio" />
+                                            <Binding Path="IsSelected" />
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
 
-                                <DataTrigger.Value>
-                                    <x:Boolean>True</x:Boolean>
-                                </DataTrigger.Value>
+                                    <DataTrigger.Value>
+                                        <x:Boolean>True</x:Boolean>
+                                    </DataTrigger.Value>
 
-                                <Setter Property="LeftItems">
-                                    <Setter.Value>
-                                        <SwipeItems>
-                                            <SwipeItem Text="Delete" Invoked="DeleteInvoked"/>
-                                        </SwipeItems>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
+                                    <Setter Property="LeftItems">
+                                        <Setter.Value>
+                                            <SwipeItems>
+                                                <SwipeItem Text="Delete" Invoked="DeleteInvoked"/>
+                                            </SwipeItems>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
 
-                            <DataTrigger TargetType="SwipeView">
-                                <DataTrigger.Binding>
-                                    <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
-                                        <Binding Path="IsNotInPortfolio" />
-                                        <Binding Path="IsSelected" />
-                                    </MultiBinding>
-                                </DataTrigger.Binding>
+                                <DataTrigger TargetType="SwipeView">
+                                    <DataTrigger.Binding>
+                                        <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
+                                            <Binding Path="IsNotInPortfolio" />
+                                            <Binding Path="IsSelected" />
+                                        </MultiBinding>
+                                    </DataTrigger.Binding>
 
-                                <DataTrigger.Value>
-                                    <x:Boolean>True</x:Boolean>
-                                </DataTrigger.Value>
+                                    <DataTrigger.Value>
+                                        <x:Boolean>True</x:Boolean>
+                                    </DataTrigger.Value>
 
-                                <Setter Property="RightItems">
-                                    <Setter.Value>
-                                        <SwipeItems>
-                                            <SwipeItem Text="Add" Invoked="AddInvoked" IsVisible="{Binding IsSelected, Converter={StaticResource NullConverter}}"/>
-                                        </SwipeItems>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                        </SwipeView.Triggers>
+                                    <Setter Property="RightItems">
+                                        <Setter.Value>
+                                            <SwipeItems>
+                                                <SwipeItem Text="Add" Invoked="AddInvoked" IsVisible="{Binding IsSelected, Converter={StaticResource NullConverter}}"/>
+                                            </SwipeItems>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </SwipeView.Triggers>
 
-                        <Grid
+                            <Grid
                                 RowDefinitions="Auto, Auto"
-                                ColumnDefinitions="Auto, Auto">
-                            <Image
-                                    Grid.RowSpan="2"
-                                    Aspect="AspectFill"
-                                    WidthRequest="60"
-                                    HeightRequest="60"
-                                    Margin="5, 0, 0, 0"
-                                    Source="{Binding IconSource}"/>
-                            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" Padding="10, 10, 0, 0" Grid.Column="1">
-                                <Label
+                                ColumnDefinitions="Auto, *">
+                                <Border Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="25"/>
+                                    </Border.StrokeShape>
+                                </Border>
+
+                                <Border>
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="25"/>
+                                    </Border.StrokeShape>
+                                    <Image
+                                        Grid.RowSpan="2"
+                                        Aspect="AspectFill"
+                                        WidthRequest="60"
+                                        HeightRequest="60"
+                                        Source="{Binding IconSource}"/>
+                                </Border>
+                                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" Padding="10, 10, 0, 0" Grid.Column="1">
+                                    <Label
                                         Text="{Binding Name}"
                                         FontAttributes="Bold"/>
-                                <Label
+                                    <Label
                                         Grid.Row="1"
                                         Text="{Binding Symbol}"/>
-                                <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{Binding IsInPortfolio, StringFormat='Is added: {0}'}" Margin="10" VerticalTextAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{Binding IsInPortfolio, StringFormat='Is added: {0}'}" Margin="10" VerticalTextAlignment="Center"/>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </SwipeView>
+                        </SwipeView>
 
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-        <ScrollView Grid.Row="2">
-            <Grid RowDefinitions="Auto,Auto" Margin="10" >
-                <Label Text="{Binding SelectedCoin.Name, StringFormat='Currently selected: {0}'}"/>
-                <Label Margin="0, 10, 0, 0" Grid.Row="1" Text="{Binding SelectedCoin.Description, StringFormat='Description: {0}'}"/>
+
+            <Border Grid.Row="2" IsVisible="{Binding IsCoinSelected}" BackgroundColor="#202530" Margin="0,10,0,10" Stroke="#202530">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+                <Grid RowDefinitions="Auto,Auto" Padding="10">
+                    <Label Text="{Binding SelectedCoin.Name, StringFormat='Currently selected: {0}'}"/>
+                    <Label Grid.Row="1" Text="{Binding SelectedCoin.Description, StringFormat='Description: {0}'}"/>
+                </Grid>
+            </Border>
+
+
+            <Grid Grid.Row="3" RowDefinitions="50,50" IsVisible="{Binding IsCoinSelected}">
+                <Border Stroke="#202530">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Button Text="Show course data" BackgroundColor="#2a204d"/>
+                </Border>
+
+                <Border Grid.Row ="1" Stroke="#202530" IsVisible="{OnPlatform True, iOS=False, Android=False}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Button Text="Add" BackgroundColor="#2a204d" Clicked="Button_Clicked"/>
+                </Border>
+
             </Grid>
-        </ScrollView>
-        
 
-    </Grid>
-    
-    
-    
+        </Grid>
+    </ScrollView>
+
+
     <!--<VerticalStackLayout Spacing="6">
        
 

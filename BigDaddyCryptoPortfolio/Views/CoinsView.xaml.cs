@@ -15,12 +15,11 @@ public partial class CoinsView : ContentPage
 {
 	private ICoinsViewModel? _coinsViewModel;
 
-	public CoinsView(ICoinsViewModel coinsViewModel, IAppUiControl uiControl)
+	public CoinsView(ICoinsViewModel coinsViewModel)
 	{
 		InitializeComponent();
 
 		_coinsViewModel = coinsViewModel;
-
 		BindingContext = _coinsViewModel;
 		
 	}
@@ -70,4 +69,12 @@ public partial class CoinsView : ContentPage
 		await DisplayAlert("Added to portfolio.", $"{addedCoin.Name} added to portfolio!", "Okay");
 		ListView.SelectedItem = null;
 	}
+
+    private async void Button_Clicked(object sender, EventArgs e)
+    {
+		var addedCoin = ListView.SelectedItem as Coin;
+        _coinsViewModel?.AddCoin(addedCoin);
+        await DisplayAlert("Added to portfolio.", $"{addedCoin.Name} added to portfolio!", "Okay");
+        ListView.SelectedItem = null;
+    }
 }

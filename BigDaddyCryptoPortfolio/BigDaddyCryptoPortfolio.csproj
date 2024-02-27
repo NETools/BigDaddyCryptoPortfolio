@@ -21,7 +21,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>BigDaddyCryptoPortfolio</ApplicationTitle>
+		<ApplicationTitle>Crypto Portfolio</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.elcorple.bigdaddycryptoportfolio</ApplicationId>
@@ -57,6 +57,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiImage Remove="Resources\Images\coin-stack.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Raw\Lang\Ger.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
@@ -66,33 +74,39 @@
 	  <MauiXaml Update="Ui\Graphics\Charts\NsPieChart.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Ui\Graphics\Charts\PieChartPiece.xaml">
+	  <MauiXaml Update="Ui\Graphics\Charts\PieChartPercentile.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Ui\Graphics\Primitives\NsPolygon.xaml">
+	  <MauiXaml Update="Views\AssetManagerView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\CoinsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\EvaluationView.xaml">
+	  <MauiXaml Update="Views\PortfolioView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\PortfolioView.xaml">
+	  <MauiXaml Update="Views\SettingsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Ui\Graphics\Charts\PieChartPercentile.xaml.cs">
+	    <DependentUpon>PieChartPercentile.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\CoinsView.xaml.cs">
 	    <DependentUpon>CoinsView.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Views\EvaluationView.xaml.cs">
-	    <DependentUpon>EvaluationView.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\PortfolioView.xaml.cs">
 	    <DependentUpon>PortfolioView.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="UserExperience\" />
+	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadGenericExceptionInfoBarBigDaddyCryptoPortfolioHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

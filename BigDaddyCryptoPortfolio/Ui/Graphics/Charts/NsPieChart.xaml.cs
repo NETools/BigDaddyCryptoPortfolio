@@ -1,103 +1,262 @@
-using BigDaddyCryptoPortfolio.Adapters.Drawables;
-using BigDaddyCryptoPortfolio.Ui.Graphics.Primitives;
-using Microsoft.Maui.Controls.Shapes;
+using BigDaddyCryptoPortfolio.Models;
+using Microsoft.Maui.Layouts;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using Path = Microsoft.Maui.Controls.Shapes.Path;
 using Timer = System.Timers.Timer;
 
 namespace BigDaddyCryptoPortfolio.Ui.Graphics.Charts;
 
 public partial class NsPieChart : ContentView
 {
-    private Timer _timer = new Timer();
+    private Timer _animationTimer = new();
+    private int _currentIndex;
+    private double _lastPercentile;
 
-	public NsPieChart()
+    private ObservableCollection<PieChartPercentile> _percentiles = [];
+
+    private Grid _percentileInfoGrid;
+    private Label _percentileInfoText;
+    private Border _percentileColor;
+
+    public ObservableCollection<Grid> Descriptions { get; private set; } = [];
+
+    private int _interval = 20;
+    public int Interval
+    {
+        get => _interval;
+        set
+        {
+            _interval = value;
+            
+            _animationTimer.Stop();
+            _animationTimer.Interval = value;
+
+            RestartAnimation();
+        }
+    }
+
+    private double _increment = 0.025;
+    public double Increment
+    {
+        get => _increment;
+        set => _increment = value;
+    }
+
+    public event Action<Percentile, Point> PercentileTapped;
+
+    public NsPieChart()
 	{
 		InitializeComponent();
 
-        _timer.Elapsed += OnElapsed;
-        _timer.Interval = 20;
-        _timer.Start();
+        _percentiles.CollectionChanged += OnPercentilesChanged;
+        Descriptions.CollectionChanged += OnDescriptionsChanged;
+
+        _animationTimer.Elapsed += OnElapsed;
+        _animationTimer.Interval = 20;
+        _animationTimer.Start();
 
         Shell.Current.Navigated += Current_Navigated;
-   
-        SizeChanged += NsPieChart_SizeChanged;
+
+        _percentileInfoGrid = new Grid();
+        _percentileInfoGrid.ZIndex = int.MaxValue;
+        _percentileInfoGrid.WidthRequest = 100;
+        _percentileInfoGrid.HeightRequest = 30;
+
+        _percentileInfoGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
+
+        _percentileInfoGrid.ColumnDefinitions.Add(new ColumnDefinition(20));
+        _percentileInfoGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Auto));
+
+        var border = new Border();
+        border.BackgroundColor = Color.FromRgb(10, 10, 10);
+        border.Opacity = 0.8;
+
+        _percentileInfoGrid.AddWithSpan(border, 0, 0, 1, 2);
+
+
+        _percentileColor = new Border();
+        _percentileColor.WidthRequest = 10;
+        _percentileColor.HeightRequest = 10;
+        _percentileColor.VerticalOptions = LayoutOptions.Center;
+        _percentileColor.HorizontalOptions = LayoutOptions.End;
+
+        _percentileInfoGrid.Add(_percentileColor);
+
+        _percentileInfoText = new Label();
+        _percentileInfoText.TextColor = Color.FromRgb(255, 255, 255);
+        _percentileInfoText.HorizontalTextAlignment = TextAlignment.Start;
+        _percentileInfoText.VerticalTextAlignment = TextAlignment.Center;
+        _percentileInfoText.HorizontalOptions = LayoutOptions.Start;
+        _percentileInfoText.Margin = new Thickness(10, 0, 10, 0);
+
+        _percentileInfoText.Text = "Tap a bar to see details.";
+
+        _percentileInfoGrid.Add(_percentileInfoText, 1, 0);
+
+        _percentileInfoGrid.IsVisible = true;
+
+        _percentileInfoGrid.TranslateTo(0, 0);
+        Canvas.Add(_percentileInfoGrid);
+
+       
     }
 
-    private void Current_Navigated(object? sender, ShellNavigatedEventArgs e)
+
+    public void AddPercentile(Percentile percentile)
     {
-        if (e.Current.Location.ToString().Contains("Portfolio"))
+        _percentiles.Add(new PieChartPercentile(percentile)
         {
-            ((PieChartBarDrawable)Renderer.Drawable).Percentage = 0;
-            _timer.Start();
+            BeginAtPercentage = _lastPercentile,
+            MaximumPercentage = percentile.Percentage,
+            RadiusDifferencePercentage = percentile.Size,
+            Color = percentile.Color
+        });
+
+        _lastPercentile += percentile.Percentage;
+    }
+
+    public void ClearPercentiles()
+    {
+        _lastPercentile = 0;
+        _percentiles.Clear();
+    }
+
+    public ICollection<PieChartPercentile> GetPercentiles() => _percentiles;
+
+    private void OnDescriptionsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        DeleteChild<Grid>([_percentileInfoGrid]);
+
+        foreach (var label in Descriptions)
+        {
+            Canvas.Add(label);
         }
+    }
+
+    private void OnPercentilesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        var collection = sender as ObservableCollection<PieChartPercentile>;
+        if (collection == null)
+            return;
+
+        DeleteChild<PieChartPercentile>();
+
+        foreach (var piece in collection)
+        {
+            piece.TappedInsidePercentile -= OnPercentileTapped;
+            piece.TappedInsidePercentile += OnPercentileTapped;
+            piece.TappedOutsidePercentiles += OnPercnetileNotTapped;
+            Canvas.Add(piece);
+        }
+
+        RestartAnimation();
+    }
+
+    private void OnPercnetileNotTapped()
+    {
+        _percentileInfoGrid.IsVisible = false;
+    }
+
+    private bool _firstRender = true;
+    private async void Current_Navigated(object? sender, ShellNavigatedEventArgs e)
+    {
+        var shell = sender as Shell;
+        if (shell == null)
+            return;
+
+        _percentileInfoGrid.IsVisible = _firstRender;
+        _firstRender = false;
+
+        var descendents = shell.CurrentPage.GetVisualTreeDescendants();
+        foreach (var descendent in descendents)
+        {
+            if (descendent is NsPieChart)
+            {
+                RestartAnimation();
+                break;
+            }
+        }
+    }
+
+    private void RestartAnimation()
+    {
+        foreach (var piece in _percentiles)
+        {
+            piece.CurrentPercenage = 0;
+            piece.RedrawPiece();
+        }
+        _currentIndex = 0;
+        _animationTimer.Start();
     }
 
     private void OnElapsed(object? sender, System.Timers.ElapsedEventArgs e)
     {
-        ((PieChartBarDrawable)Renderer.Drawable).Percentage += 0.025;
-        Renderer.Invalidate();
-
-        if (((PieChartBarDrawable)Renderer.Drawable).Percentage >= 0.92)
-            _timer.Stop();
-    }
-
-    private void NsPieChart_SizeChanged(object? sender, EventArgs e)
-    {
-        ((PieChartBarDrawable)Renderer.Drawable).Percentage = 0;
-        _timer.Start();
-    }
-
-    private void PolygonTapped(object? sender, TappedEventArgs e)
-	{
-        var polygon = sender as Polygon;
-        if (polygon == null)
+        if(_percentiles.Count == 0)
+        {
+            _animationTimer.Stop();
             return;
-
-		var points = polygon.Points;
-		var relativePoint = e.GetPosition((Element)sender);
-        Stopwatch sw = new Stopwatch();
-        sw.Start();
-        var result = IsPointInPolygon4(points, relativePoint.Value);
-        sw.Stop();
-
-        Debug.WriteLine($"Calculation took: {sw.Elapsed.TotalMilliseconds} ms!");
-        if (result)
-        {
-            Debug.WriteLine("Polygon clicked!");
         }
-        else
-        {
-         
-        }
-	}
 
+        var currentPiece = _percentiles[_currentIndex];
 
-    /// <summary>
-    /// Determines if the given point is inside the polygon
-    /// </summary>
-    /// <param name="polygon">the vertices of polygon</param>
-    /// <param name="testPoint">the given point</param>
-    /// <returns>true if the point is inside the polygon; otherwise, false</returns>
-    public static bool IsPointInPolygon4(PointCollection polygon, Point testPoint)
-    {
-        bool result = false;
-        int j = polygon.Count - 1;
-        for (int i = 0; i < polygon.Count; i++)
+        if (currentPiece.CurrentPercenage >= currentPiece.MaximumPercentage)
         {
-            if (polygon[i].Y < testPoint.Y && polygon[j].Y >= testPoint.Y ||
-                polygon[j].Y < testPoint.Y && polygon[i].Y >= testPoint.Y)
+            _currentIndex++;
+            if (_currentIndex >= _percentiles.Count)
             {
-                if (polygon[i].X + (testPoint.Y - polygon[i].Y) /
-                   (polygon[j].Y - polygon[i].Y) *
-                   (polygon[j].X - polygon[i].X) < testPoint.X)
+                _animationTimer.Stop();
+                return;
+
+            }
+        }
+
+        currentPiece.CurrentPercenage += _increment;
+        currentPiece.RedrawPiece();
+    }
+
+    private void DeleteChild<T>(List<T> excludes = null)
+    {
+        for (int i = Canvas.Children.Count - 1; i >= 0; i--)
+        {
+            var child = Canvas.Children[i];
+            if (child is T)
+            {
+                if (excludes != null && excludes.Exists(p => p.Equals(child)))
+                    continue;
+
+                Canvas.Children.RemoveAt(i);
+                if (child is Element element)
                 {
-                    result = !result;
+                    Canvas.RemoveLogicalChild(element);
                 }
             }
-            j = i;
         }
-        return result;
     }
+
+    private async void OnPercentileTapped(PieChartPercentile renderer, Percentile percentile, Point point)
+    {
+        _percentileColor.BackgroundColor = percentile.Color;
+
+        _percentileInfoGrid.IsVisible = true;
+        _percentileInfoText.Text = percentile.Label;
+
+        var x = point.X - _percentileInfoGrid.X;
+        var y = point.Y - _percentileInfoGrid.Y;
+
+        if (x + _percentileInfoGrid.Width >= Canvas.Width * 0.5)
+        {
+            x -= _percentileInfoGrid.Width;
+        }
+        if (y + _percentileInfoGrid.Height >= Canvas.Height * 0.5)
+        {
+            y -= _percentileInfoGrid.Height;
+        }
+
+        await _percentileInfoGrid.TranslateTo(x, y);
+
+        // Delegate event further up
+        PercentileTapped?.Invoke(percentile, point);
+    }
+
 }

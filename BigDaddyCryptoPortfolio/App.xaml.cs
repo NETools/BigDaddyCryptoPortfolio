@@ -5,45 +5,42 @@ using System.Collections.Specialized;
 
 namespace BigDaddyCryptoPortfolio
 {
-	public partial class App : Application, IAppUiControl
+	public partial class App : Application
 	{
-		public App(ICoinsViewModel coinsViewModel)
+		public App(ICoinsViewModel coinsViewModel, IAppUiControl context, IPortfolioViewModel portfolioViewModel)
 		{
 			InitializeComponent();
-			
+
+            context.AddTabRequested += OnAddTabRequested;
+
+            Routing.RegisterRoute("views/coins/settings", typeof(SettingsView));
+
+
 			Tabs.Items.Add(new ShellContent()
 			{
 				Title = "Coins",
 				Route = "CoinsView",
-				ContentTemplate = new DataTemplate(() => new CoinsView(coinsViewModel, this))
+				ContentTemplate = new DataTemplate(() => new CoinsView(coinsViewModel)),
 			});
 
+            Tabs.Items.Add(new ShellContent()
+            {
+                Title = "Asset Manager",
+                Route = "AssetManagerView",
+                ContentTemplate = new DataTemplate(() => new AssetManagerView())
+            });
 
-			Tabs.Items.Add(new ShellContent()
+            Tabs.Items.Add(new ShellContent()
 			{
 				Title = "Portfolio",
 				Route = "PortfolioView",
-				ContentTemplate = new DataTemplate(() => new PortfolioView())
+				ContentTemplate = new DataTemplate(() => new PortfolioView(portfolioViewModel))
 			});
-
-
-			Tabs.Items.Add(new ShellContent()
-			{
-				Title = "Evaluation",
-				Route = "EvaluationView",
-				ContentTemplate = new DataTemplate(() => new EvaluationView())
-			});
-
 		}
 
-		public void AddTab(string tabName)
-		{
-			throw new NotImplementedException();
-		}
+        private void OnAddTabRequested(string tabName)
+        {
 
-		private async void OnCollectionChanged(object? sender, NotifyCollectionChangedAction e)
-		{
-
-		}
+        }
 	}
 }

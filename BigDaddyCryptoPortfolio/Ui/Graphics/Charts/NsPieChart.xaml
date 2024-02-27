@@ -2,26 +2,8 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BigDaddyCryptoPortfolio.Ui.Graphics.Charts.NsPieChart"
-             xmlns:Drawable="clr-namespace:BigDaddyCryptoPortfolio.Adapters.Drawables"
-             xmlns:NsPolygon="clr-namespace:BigDaddyCryptoPortfolio.Ui.Graphics.Primitives">
+             xmlns:Renderer="clr-namespace:BigDaddyCryptoPortfolio.Adapters.Drawables">
 
-    <ContentView.Resources>
-        <ResourceDictionary>
-            <Drawable:PieChartBarDrawable x:Key="PieBar"/>
-        </ResourceDictionary>
-    </ContentView.Resources>
-    
-    <Grid x:Name="Canvas">
-        <!--<GraphicsView 
-            x:Name="Canvas" 
-            Drawable="{StaticResource Ellipse}">
-            <GraphicsView.GestureRecognizers>
-                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
-                <PanGestureRecognizer PanUpdated="PanGestureRecognizer_PanUpdated"/>
-            </GraphicsView.GestureRecognizers>
-        </GraphicsView>-->
+    <Grid x:Name="Canvas"/>
 
-        <GraphicsView x:Name="Renderer" Drawable="{StaticResource PieBar}"/>
-
-    </Grid>
 </ContentView>
