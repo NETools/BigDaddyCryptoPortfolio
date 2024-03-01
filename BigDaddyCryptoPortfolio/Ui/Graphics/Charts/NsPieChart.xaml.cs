@@ -253,6 +253,8 @@ public partial class NsPieChart : ContentView
             y -= _percentileInfoGrid.Height;
         }
 
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+
         await _percentileInfoGrid.TranslateTo(x, y);
 
         // Delegate event further up

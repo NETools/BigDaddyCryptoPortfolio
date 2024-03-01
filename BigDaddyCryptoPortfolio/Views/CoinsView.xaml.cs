@@ -66,8 +66,12 @@ public partial class CoinsView : ContentPage
 	{
 		var addedCoin = (Coin)((SwipeItem)sender).BindingContext;
 		_coinsViewModel?.AddCoin(addedCoin);
-		await DisplayAlert("Added to portfolio.", $"{addedCoin.Name} added to portfolio!", "Okay");
+
+        HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
+
+        await DisplayAlert("Added to portfolio.", $"{addedCoin.Name} added to portfolio!", "Okay");
 		ListView.SelectedItem = null;
+
 	}
 
     private async void Button_Clicked(object sender, EventArgs e)
