@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BigDaddyCryptoPortfolio.Views.SettingsView"
+             Title="Settings"
+             BackgroundColor="#111826">
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="400"/>
+            </Grid.RowDefinitions>
+
+            <Grid BackgroundColor="#202530" Margin="10">
+                
+            </Grid>
+            <Grid Grid.Row="1" BackgroundColor="#202530" Margin="10" Padding="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+                <Label Text="Import bitvavo portfolio" FontSize="Header" FontAttributes="Bold"/>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="200"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Text="Api-Key:" Padding="0,10,0,0"/>
+                        <Entry Grid.Column="1" Placeholder="Read-only Bitvavo Api key"/>
+
+                        <Label Grid.Row="1" Text="Api-Secret:" Padding="0,10,0,0"/>
+                        <Entry Grid.Row="1" Grid.Column="1" Placeholder="Read-only Bitvavo Api Secret" IsPassword="True"/>
+                    </Grid>
+               
+
+                    
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="100"/>
+                        </Grid.RowDefinitions>
+                        <Label Text="Disclaimer:" Padding="0,10,0,0" FontAttributes="Bold"/>
+                        <Label Grid.Row="1" Text="Use at your own risk. The app does notyour own risk. The app does notyour own risk. The app does notyour own risk. The app does not" Padding="0,10,0,0"/>
+                    </Grid>
+                    
+      
+                </Grid>
+
+            </Grid>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>

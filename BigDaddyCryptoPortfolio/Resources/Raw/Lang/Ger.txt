@@ -1,0 +1,25 @@
+﻿Toolbar_Header_Settings=Einstellungen
+
+Picker_Title=Wählen Sie eine Kategorie aus.
+
+Picker_Option_Ai=AI
+Picker_Option_Web3=Web3
+Picker_Option_Defi=Defi
+Picker_Option_GreenCoins=Grüne Coins
+Picker_Option_Gaming=Gaming/Metaverse
+Picker_Option_BTC=Btc-Zusammenhang
+Picker_Option_CBDC=CBDC-Netzwerk
+Picker_Option_ECommerce=eCommerce
+Picker_Option_Tokenization=Tokenization/RWA
+Picker_Option_NoHype=Kein hype Thema
+
+SwipeItem_Left_Delete=Löschen
+SwipeItem_Right_Add=Hinzufügen
+
+CollectionView_Item_Label_Status_Added=Befindet sich im Portfolio
+CollectionView_Item_Label_Status_Not_Added=Befindet sich nicht im Portfolio
+
+Selected_Introduction_Text=Momentan ausgewählt: {0}
+Selected_Description_Text=Beschreibung: {0}
+
+Selected_Button_Text=Zeige Kursdaten

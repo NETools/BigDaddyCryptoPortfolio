@@ -1,8 +1,8 @@
 namespace BigDaddyCryptoPortfolio.Views;
 
-public partial class EvaluationView : ContentPage
+public partial class SettingsView : ContentPage
 {
-	public EvaluationView()
+	public SettingsView()
 	{
 		InitializeComponent();
 	}

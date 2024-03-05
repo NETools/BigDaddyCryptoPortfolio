@@ -2,11 +2,129 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BigDaddyCryptoPortfolio.Views.PortfolioView"
-             Title="Portfolio">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:NsGraphics="clr-namespace:BigDaddyCryptoPortfolio.Ui.Graphics.Charts"
+             xmlns:ChartText="clr-namespace:BigDaddyCryptoPortfolio.Models"
+             Title="Portfolio"
+             BackgroundColor="#111826">
+
+
+    <ScrollView>
+        <Grid Margin="5, 0, 5, 0"> 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="400"/>
+                <RowDefinition Height="600"/>
+            </Grid.RowDefinitions>
+
+
+            <Grid Padding="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border BackgroundColor="#202530">
+                    <Border.Shadow>
+                        <Shadow Brush="White"/>
+                    </Border.Shadow>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="1" x:Name="Categories" Padding="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border BackgroundColor="#202530" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                    <Border.Shadow>
+                        <Shadow Brush="White"/>
+                    </Border.Shadow>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+
+                <Label FontSize="Large" Text="Score und Allocation" Margin="10"/>
+
+                <Grid Grid.Row="1" VerticalOptions="Center" x:Name="Allocation">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="14"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="1" 
+                            Grid.Row="0" 
+                            WidthRequest="14" 
+                            HeightRequest="14" 
+                            VerticalOptions="Center"
+                            BackgroundColor="Red" 
+                            Stroke="Red">
+                        <Border.StrokeShape>
+                            <Ellipse/>
+                        </Border.StrokeShape>
+                    </Border>
+                    <Label Grid.Row="0" Grid.Column="2" Text="Test 1" FontSize="18" Padding="10" VerticalOptions="Center"/>
+                </Grid>
+
+
+                <NsGraphics:NsPieChart 
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Padding="5"
+                    Margin="5"
+                    x:Name="PieChart" 
+                    Interval="20" 
+                    Increment="0.025" 
+                    PercentileTapped="PercentileTapped">
+                    <NsGraphics:NsPieChart.PieChartShadow>
+                        <NsGraphics:NsPieChartShadow Color="#13161c"/>
+                    </NsGraphics:NsPieChart.PieChartShadow>
+                    
+                    <NsGraphics:NsPieChart.Descriptions>
+                        <Grid VerticalOptions="Center" HorizontalOptions="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Label Text="Score" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Label Grid.Row="1" Text="{Binding Score}" FontSize="22" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Label Grid.Row="2" Text="{Binding EvaluationText}" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        </Grid>
+                    </NsGraphics:NsPieChart.Descriptions>
+                </NsGraphics:NsPieChart>
+            </Grid>
+
+            <Grid Grid.Row="2" Padding="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border BackgroundColor="#202530">
+                    <Border.Shadow>
+                        <Shadow Brush="White"/>
+                    </Border.Shadow>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+            </Grid>
+
+        </Grid>
+    </ScrollView>
+
 </ContentPage>
