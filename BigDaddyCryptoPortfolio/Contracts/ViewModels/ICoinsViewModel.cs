@@ -11,10 +11,16 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 {
 	public interface ICoinsViewModel : INotifyPropertyChanged
 	{
-		public List<Coin> Coins { get; }
-		public Coin? SelectedCoin { get; }
+        public List<string> Categories { get; }
+		public List<Color> CategoryColor { get; }
+		public bool IsCategorySelectorExpanded { get; set; }
+		public string SelectedCategory { get; set; }	
 
-		public void SelectCategory(int index);
+        public List<Coin> Coins { get; }
+		public Coin? SelectedCoin { get; }
+		public string UiInfoMessage { get; }
+
+        public void SelectCategory(int index);
 		public void SelectCoin(Coin coin);
 		public void AddCoin(Coin coin);
 		public void DeleteCoin(Coin coin);

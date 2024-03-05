@@ -7,6 +7,7 @@ namespace BigDaddyCryptoPortfolio.Ui.Graphics.Charts;
 public partial class PieChartPercentile : ContentView
 {
     private Percentile _percentile;
+    private bool _canBeTapped;
 
 	public double MaximumPercentage { get; set; }
 	public double BeginAtPercentage { get; set; }
@@ -19,11 +20,13 @@ public partial class PieChartPercentile : ContentView
 
     public PieChartRenderer Renderer { get; private set; }
 
-    public PieChartPercentile(Percentile percentile)
+    public PieChartPercentile(Percentile percentile, bool canBeTapped)
 	{
 		InitializeComponent();
 		Renderer = (PieChartRenderer)Canvas.Drawable;
+
         _percentile = percentile;
+        _canBeTapped = canBeTapped;
     }
 
     public void RedrawPiece()

@@ -18,12 +18,28 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 	internal class CoinsViewModel : ICoinsViewModel
 	{
 		private Coin? _selectedCoin;
+	
 		private CoinCategory _selectedCategory;
-
 		private IPortfolioViewModel _portfolioViewModel;
 
         private List<Coin> _coins = new List<Coin>();
 		public List<Coin> Coins => _coins.FindAll(p => (p.Category & _selectedCategory) == _selectedCategory);
+
+		public List<string> Categories { get; private set; } = 
+			["AI", 
+			"Web3", 
+			"Defi", 
+			"Grüne Coins", 
+			"Gaming/Metaverse", 
+			"BTC-Zusammenhang", 
+			"CBDC-Netzwerk", 
+			"eCommerce", 
+			"Tokenization", 
+			"Kein Hype"];
+        public bool IsCategorySelectorExpanded { get; set; }
+		public string SelectedCategory { get; set; }
+		public List<Color> CategoryColor { get; } = [Color.FromArgb("#ffd700"), Color.FromArgb("#dc143c"), Color.FromArgb("#15b"), Color.FromArgb("#0a6"), Color.FromArgb("#00bfff"), Color.FromArgb("#e61"), Color.FromArgb("#678"), Color.FromArgb("#72a"), Color.FromArgb("#ff5aac"), Color.FromArgb("#000000")];
+		public Color SelectedCategoryColor => CategoryColor[(int)Math.Log2((int)_selectedCategory)];
 
         public Coin? SelectedCoin
 		{
@@ -40,7 +56,18 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
 		public ICommand ToolBarSettingsCommand { get; set; }
 
-		public event PropertyChangedEventHandler? PropertyChanged;
+		private string _uiInfoMessage;
+        public string UiInfoMessage
+		{
+			get => _uiInfoMessage;
+			set
+			{
+				_uiInfoMessage = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(UiInfoMessage)));
+			}
+		}
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
 		public CoinsViewModel(IPortfolioViewModel portfolioViewModel)
 		{
@@ -50,30 +77,14 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 			SelectCategory(0);
 
 			ToolBarSettingsCommand = new BasicSettingsShowCommand();
+        }
 
-
-			AddCoin(_coins[0]);
-		}
-
-		private void LoadCoins()
+		private async void LoadCoins()
 		{
-            _coins.Add(new Coin()
-            {
-                Category = CoinCategory.BtcAssociates | CoinCategory.Web3,
-                Name = "Bitcoin",
-                Symbol = "BTC",
-                IconSource = "https://assets.coingecko.com/coins/images/1/standard/bitcoin.png",
-                Description = "Bitcoin is a digital currency which operates free of any central control or the oversight of banks or governments. Instead it relies on peer-to-peer software and cryptography"
-            });
-
-            _coins.Add(new Coin()
-            {
-                Category = CoinCategory.ECommerce,
-                Name = "Solana",
-                Symbol = "SOL",
-                IconSource = "https://assets.coingecko.com/coins/images/4128/large/solana.png",
-                Description = "Solana is a blockchain whose purpose, use cases, and capabilities rival (and possibly exceed) that of Ethereum. It is one of the more popular blockchains, and its token, SOL, commands a decent share of the cryptocurrency market"
-            });
+			using var stream = await FileSystem.OpenAppPackageFileAsync("CoinList.json");
+			using var streamReader = new StreamReader(stream);
+			var json = await streamReader.ReadToEndAsync();
+			_coins = new List<Coin>(JsonSerializer.Deserialize<List<Coin>>(json));
         }
 
 		public void SelectCategory(int index)
@@ -82,7 +93,14 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 			if (SelectedCoin != null)
 				SelectedCoin.IsSelected = false;
 			SelectedCoin = null;
+			
+			IsCategorySelectorExpanded = false;
+			SelectedCategory = Categories[index];
+
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCategorySelectorExpanded)));
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Coins)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCategory)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCategoryColor)));
 		}
 
 		public void AddCoin(Coin coin)
@@ -93,7 +111,9 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
 			_portfolioViewModel.AddCoin(coin);
 
-			SelectedCoin = null;
+			UiInfoMessage = $"{coin.Name} added to portfolio!";
+
+            SelectedCoin = null;
 		}
 
 		public void SelectCoin(Coin coin)
@@ -114,7 +134,9 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
 			_portfolioViewModel.RemoveCoin(coin);
 
-			SelectedCoin = null;
+            UiInfoMessage = $"{coin.Name} removed from portfolio!";
+
+            SelectedCoin = null;
 		}
 	}
 }

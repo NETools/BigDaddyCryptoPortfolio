@@ -9,7 +9,7 @@
 
 
     <ScrollView>
-        <Grid>
+        <Grid Margin="5, 0, 5, 0"> 
             <Grid.RowDefinitions>
                 <RowDefinition Height="200"/>
                 <RowDefinition Height="400"/>
@@ -17,19 +17,22 @@
             </Grid.RowDefinitions>
 
 
-            <Grid>
+            <Grid Padding="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Border BackgroundColor="#202530">
+                    <Border.Shadow>
+                        <Shadow Brush="White"/>
+                    </Border.Shadow>
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>
                 </Border>
             </Grid>
-            
-            <Grid Grid.Row="1" x:Name="Categories">
+
+            <Grid Grid.Row="1" x:Name="Categories" Padding="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -39,12 +42,15 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Border BackgroundColor="#202530" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                    <Border.Shadow>
+                        <Shadow Brush="White"/>
+                    </Border.Shadow>
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>
                 </Border>
 
-                <Label FontSize="Large" Text="Score and Allocation" Margin="10"/>
+                <Label FontSize="Large" Text="Score und Allocation" Margin="10"/>
 
                 <Grid Grid.Row="1" VerticalOptions="Center" x:Name="Allocation">
                     <Grid.RowDefinitions>
@@ -70,18 +76,22 @@
                             <Ellipse/>
                         </Border.StrokeShape>
                     </Border>
-                    <Label Grid.Row="0" Grid.Column="2" Text="Test1" FontSize="18" Padding="10" VerticalOptions="Center"/>
+                    <Label Grid.Row="0" Grid.Column="2" Text="Test 1" FontSize="18" Padding="10" VerticalOptions="Center"/>
                 </Grid>
-                
+
 
                 <NsGraphics:NsPieChart 
                     Grid.Row="1"
                     Grid.Column="1"
                     Padding="5"
+                    Margin="5"
                     x:Name="PieChart" 
                     Interval="20" 
                     Increment="0.025" 
                     PercentileTapped="PercentileTapped">
+                    <NsGraphics:NsPieChart.PieChartShadow>
+                        <NsGraphics:NsPieChartShadow Color="#13161c"/>
+                    </NsGraphics:NsPieChart.PieChartShadow>
                     
                     <NsGraphics:NsPieChart.Descriptions>
                         <Grid VerticalOptions="Center" HorizontalOptions="Center">
@@ -92,19 +102,22 @@
                             </Grid.RowDefinitions>
 
                             <Label Text="Score" VerticalOptions="Center" HorizontalOptions="Center"/>
-                            <Label Grid.Row="1" Text="0.0" FontSize="22" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center"/>
-                            <Label Grid.Row="2" Text="Schlecht" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Label Grid.Row="1" Text="{Binding Score}" FontSize="22" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <Label Grid.Row="2" Text="{Binding EvaluationText}" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center"/>
                         </Grid>
                     </NsGraphics:NsPieChart.Descriptions>
                 </NsGraphics:NsPieChart>
             </Grid>
 
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="2" Padding="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <Border BackgroundColor="#202530">
+                    <Border.Shadow>
+                        <Shadow Brush="White"/>
+                    </Border.Shadow>
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>

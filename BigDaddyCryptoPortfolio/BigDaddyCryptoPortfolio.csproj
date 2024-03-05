@@ -61,16 +61,29 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\alata-regular.ttf" />
+	  <None Remove="Resources\Fonts\UniSansHeavy.otf" />
+	  <None Remove="Resources\Fonts\UniSansHeavyItalic.otf" />
+	  <None Remove="Resources\Fonts\UniSansThin.otf" />
+	  <None Remove="Resources\Fonts\UniSansThinItalic.otf" />
+	  <None Remove="Resources\Raw\CoinList.json" />
 	  <None Remove="Resources\Raw\Lang\Ger.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Ui\MiniViews\SelectedCoinCourseView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Ui\MiniViews\SelectedCoinInfoView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Ui\Graphics\Charts\NsPieChart.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -104,6 +117,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Ui\Popups\" />
 	  <Folder Include="UserExperience\" />
 	</ItemGroup>
 

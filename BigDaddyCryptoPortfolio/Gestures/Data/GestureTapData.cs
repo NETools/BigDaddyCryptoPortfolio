@@ -12,7 +12,7 @@ namespace BigDaddyCryptoPortfolio.Gestures.Data
 	
 		public int TappedCount;
 		
-		public int LastSelectedIndex;
+		public object LastSelectedItem;
 		
 		public long Duration;
 

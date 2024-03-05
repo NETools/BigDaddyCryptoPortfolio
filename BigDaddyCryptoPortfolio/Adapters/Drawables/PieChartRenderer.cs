@@ -17,21 +17,24 @@ namespace BigDaddyCryptoPortfolio.Adapters.Drawables
         public double StartPercentage { get; set; }
         public double Percentage { get; set; }
 
+        public double OffsetX { get; set; }
+        public double OffsetY { get; set; } 
+
         public PointCollection Points { get; private set; }
 
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {
             Points = new PointCollection();
-            var minSide = Math.Min(dirtyRect.Width, dirtyRect.Height);
+            var minSide = System.Math.Min(dirtyRect.Width, dirtyRect.Height);
 
             AddCircularBar(
                 Points,
-                dirtyRect.Width * 0.5f,
-                dirtyRect.Height * .5,
+                dirtyRect.Width * 0.5f + OffsetX,
+                dirtyRect.Height * .5 + OffsetY,
                 minSide * 0.5 / (1.0 + RadiusDifferencePercentage),
                 RadiusDifferencePercentage,
                 StartPercentage,
-                Math.Min(Percentage, MaximumPercentage));
+                System.Math.Min(Percentage, MaximumPercentage));
 
             var path = GetPath(Points);
             canvas.FillColor = Color;
@@ -42,20 +45,20 @@ namespace BigDaddyCryptoPortfolio.Adapters.Drawables
         private static void AddCircularBar(PointCollection points, double cx, double cy, double radius, double diffPercentage, double startPercentage, double percentage)
         {
             int samples = 25;
-            double dt = (Math.PI * 2.0 * percentage) / samples;
+            double dt = (System.Math.PI * 2.0 * percentage) / samples;
 
             for (int sampleIndex = 0; sampleIndex <= samples; sampleIndex++)
             {
-                var x = Math.Sin(sampleIndex * dt + Math.PI * 2.0 * startPercentage) * radius + cx;
-                var y = Math.Cos(sampleIndex * dt + Math.PI * 2.0 * startPercentage) * radius + cy;
+                var x = System.Math.Sin(sampleIndex * dt + System.Math.PI * 2.0 * startPercentage) * radius + cx;
+                var y = System.Math.Cos(sampleIndex * dt + System.Math.PI * 2.0 * startPercentage) * radius + cy;
 
                 points.Add(new Point(x, y));
             }
 
             for (int sampleIndex = samples; sampleIndex >= 0; sampleIndex--)
             {
-                var x = Math.Sin(sampleIndex * dt + Math.PI * 2.0 * startPercentage) * radius * (1.0 + diffPercentage) + cx;
-                var y = Math.Cos(sampleIndex * dt + Math.PI * 2.0 * startPercentage) * radius * (1.0 + diffPercentage) + cy;
+                var x = System.Math.Sin(sampleIndex * dt + System.Math.PI * 2.0 * startPercentage) * radius * (1.0 + diffPercentage) + cx;
+                var y = System.Math.Cos(sampleIndex * dt + System.Math.PI * 2.0 * startPercentage) * radius * (1.0 + diffPercentage) + cy;
 
                 points.Add(new Point(x, y));
             }

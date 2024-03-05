@@ -9,9 +9,11 @@ namespace BigDaddyCryptoPortfolio.Ui.Graphics.Charts;
 
 public partial class NsPieChart : ContentView
 {
-    private Timer _animationTimer = new();
+    private IDispatcherTimer _animationTimer;
     private int _currentIndex;
     private double _lastPercentile;
+
+    private PieChartPercentile _shadowPercentile;
 
     private ObservableCollection<PieChartPercentile> _percentiles = [];
 
@@ -30,7 +32,7 @@ public partial class NsPieChart : ContentView
             _interval = value;
             
             _animationTimer.Stop();
-            _animationTimer.Interval = value;
+            _animationTimer.Interval = TimeSpan.FromTicks(_interval);
 
             RestartAnimation();
         }
@@ -43,6 +45,8 @@ public partial class NsPieChart : ContentView
         set => _increment = value;
     }
 
+    public NsPieChartShadow PieChartShadow { get; set; }
+
     public event Action<Percentile, Point> PercentileTapped;
 
     public NsPieChart()
@@ -52,8 +56,9 @@ public partial class NsPieChart : ContentView
         _percentiles.CollectionChanged += OnPercentilesChanged;
         Descriptions.CollectionChanged += OnDescriptionsChanged;
 
-        _animationTimer.Elapsed += OnElapsed;
-        _animationTimer.Interval = 20;
+        _animationTimer = Dispatcher.CreateTimer();
+        _animationTimer.Tick += OnElapsed;
+        _animationTimer.Interval = TimeSpan.FromTicks(20);
         _animationTimer.Start();
 
         Shell.Current.Navigated += Current_Navigated;
@@ -90,7 +95,7 @@ public partial class NsPieChart : ContentView
         _percentileInfoText.HorizontalOptions = LayoutOptions.Start;
         _percentileInfoText.Margin = new Thickness(10, 0, 10, 0);
 
-        _percentileInfoText.Text = "Tap a bar to see details.";
+        _percentileInfoText.Text = "Balken drücken für Details.";
 
         _percentileInfoGrid.Add(_percentileInfoText, 1, 0);
 
@@ -99,13 +104,19 @@ public partial class NsPieChart : ContentView
         _percentileInfoGrid.TranslateTo(0, 0);
         Canvas.Add(_percentileInfoGrid);
 
-       
-    }
+        _shadowPercentile = new PieChartPercentile(new Percentile(), false);
+        _shadowPercentile.BeginAtPercentage = 0;
+        _shadowPercentile.MaximumPercentage = 1;
+        _shadowPercentile.Color = Color.FromRgb(0, 0, 0);
+        _shadowPercentile.RadiusDifferencePercentage = 0.25;
 
+        _shadowPercentile.Renderer.OffsetX += 5;
+        _shadowPercentile.Renderer.OffsetY += 5;
+    }
 
     public void AddPercentile(Percentile percentile)
     {
-        _percentiles.Add(new PieChartPercentile(percentile)
+        _percentiles.Add(new PieChartPercentile(percentile, true)
         {
             BeginAtPercentage = _lastPercentile,
             MaximumPercentage = percentile.Percentage,
@@ -141,6 +152,8 @@ public partial class NsPieChart : ContentView
             return;
 
         DeleteChild<PieChartPercentile>();
+
+        Canvas.Add(_shadowPercentile);
 
         foreach (var piece in collection)
         {
@@ -181,16 +194,22 @@ public partial class NsPieChart : ContentView
 
     private void RestartAnimation()
     {
+        _shadowPercentile.CurrentPercenage = 0;
+        _shadowPercentile.Color = PieChartShadow == null ? Color.FromRgb(0, 0, 0) : PieChartShadow.Color;
+        _shadowPercentile.RedrawPiece();
+
         foreach (var piece in _percentiles)
         {
             piece.CurrentPercenage = 0;
             piece.RedrawPiece();
         }
+
+
         _currentIndex = 0;
         _animationTimer.Start();
     }
 
-    private void OnElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    private void OnElapsed(object? sender, EventArgs e)
     {
         if(_percentiles.Count == 0)
         {
@@ -210,6 +229,10 @@ public partial class NsPieChart : ContentView
 
             }
         }
+
+
+        _shadowPercentile.CurrentPercenage += _increment;
+        _shadowPercentile.RedrawPiece();
 
         currentPiece.CurrentPercenage += _increment;
         currentPiece.RedrawPiece();
