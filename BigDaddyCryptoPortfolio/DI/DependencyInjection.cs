@@ -16,6 +16,7 @@ namespace BigDaddyCryptoPortfolio.DI
 		{
             appBuilder.Services.AddSingleton<ICoinsViewModel, CoinsViewModel>();
 			appBuilder.Services.AddSingleton<IPortfolioViewModel, PortfolioViewModel>();
+			appBuilder.Services.AddSingleton<ISettingsViewModel, SettingsViewModel>();
 
 			appBuilder.Services.AddSingleton<IAppUiControl, AppUiController>();
 		

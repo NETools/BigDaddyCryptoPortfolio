@@ -5,15 +5,33 @@ using System.Collections.Specialized;
 
 namespace BigDaddyCryptoPortfolio
 {
-	public partial class App : Application
+
+    class Test : RouteFactory
+    {
+        public override Element GetOrCreate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Element GetOrCreate(IServiceProvider services)
+        {
+            var settingsViewModel = services.GetService<ISettingsViewModel>();
+            var portfolioViewModel = services.GetService<IPortfolioViewModel>();
+            var coinsViewModel = services.GetService<ICoinsViewModel>();
+
+            return new SettingsView(settingsViewModel, coinsViewModel, portfolioViewModel);    
+        }
+    }
+
+    public partial class App : Application
 	{
-		public App(ICoinsViewModel coinsViewModel, IAppUiControl context, IPortfolioViewModel portfolioViewModel)
+		public App(ICoinsViewModel coinsViewModel, IAppUiControl context, IPortfolioViewModel portfolioViewModel, ISettingsViewModel settingsViewModel)
 		{
 			InitializeComponent();
 
             context.AddTabRequested += OnAddTabRequested;
 
-            Routing.RegisterRoute("views/coins/settings", typeof(SettingsView));
+            Routing.RegisterRoute("views/coins/settings", new Test());
 
 
 			Tabs.Items.Add(new ShellContent()

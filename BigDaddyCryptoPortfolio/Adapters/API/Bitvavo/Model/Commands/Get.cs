@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BigDaddyCryptoPortfolio.Adapters.API
+namespace BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Commands
 {
-    public class CoinListRetrieveAdapter
+    internal class Get
     {
-
     }
 }

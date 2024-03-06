@@ -25,6 +25,8 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 		public void AddCoin(Coin coin);
 		public void DeleteCoin(Coin coin);
 
+		public Coin? FindCoin(string symbol);
+
 		// public void SetIndices(int startIndex, int endIndex);
 	}
 }

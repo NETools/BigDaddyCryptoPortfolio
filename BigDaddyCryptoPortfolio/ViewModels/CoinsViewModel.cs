@@ -138,5 +138,10 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
             SelectedCoin = null;
 		}
-	}
+
+        public Coin? FindCoin(string symbol)
+        {
+			return _coins.Find(p => p.Symbol.ToLower() == symbol.ToLower());
+        }
+    }
 }

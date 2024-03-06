@@ -8,7 +8,8 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="100"/>
-                <RowDefinition Height="400"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Grid BackgroundColor="#202530" Margin="10">
@@ -17,14 +18,14 @@
             <Grid Grid.Row="1" BackgroundColor="#202530" Margin="10" Padding="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Label Text="Import bitvavo portfolio" FontSize="Header" FontAttributes="Bold"/>
 
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <Grid>
@@ -37,26 +38,35 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Label Text="Api-Key:" Padding="0,10,0,0"/>
-                        <Entry Grid.Column="1" Placeholder="Read-only Bitvavo Api key"/>
+                        <Entry Grid.Column="1" Placeholder="Read-only Bitvavo Api key" Text="{Binding ApiKey}"/>
 
                         <Label Grid.Row="1" Text="Api-Secret:" Padding="0,10,0,0"/>
-                        <Entry Grid.Row="1" Grid.Column="1" Placeholder="Read-only Bitvavo Api Secret" IsPassword="True"/>
+                        <Entry Grid.Row="1" Grid.Column="1" Placeholder="Read-only Bitvavo Api Secret" IsPassword="True" Text="{Binding ApiSecret}"/>
                     </Grid>
-               
-
-                    
+                                   
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="100"/>
+                            <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
                         <Label Text="Disclaimer:" Padding="0,10,0,0" FontAttributes="Bold"/>
                         <Label Grid.Row="1" Text="Use at your own risk. The app does notyour own risk. The app does notyour own risk. The app does notyour own risk. The app does not" Padding="0,10,0,0"/>
+                        <Button Grid.Row="2" Text="Load portfolio" Clicked="Button_Clicked"/>
                     </Grid>
                     
       
                 </Grid>
 
+            </Grid>
+            <Grid Grid.Row="2" VerticalOptions="End">
+                <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0.15" BackgroundColor="#202530">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="25"/>
+                    </Border.StrokeShape>
+
+                    <Label x:Name="InfoLabel" TextColor="Gold" Padding="10" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
             </Grid>
 
         </Grid>
