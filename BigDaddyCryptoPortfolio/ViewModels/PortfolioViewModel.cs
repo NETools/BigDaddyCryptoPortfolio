@@ -4,8 +4,11 @@ using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Shared;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,6 +35,8 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         private ScoreCalculationAdapter _scoreCalculation;
 
         public IDictionary<CoinCategory, IList<Coin>> Assets { get; set; } = new Dictionary<CoinCategory, IList<Coin>>();
+        public IList<Coin> Coins { get; private set; } = new ObservableCollection<Coin>();
+
         public int PortfolioEntryCount { get; private set; }
 
         public double Score
@@ -82,6 +87,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         public IList<CategoryIndicator> CategoryIndicators { get; private set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         public PortfolioViewModel()
         {
@@ -117,6 +123,8 @@ namespace BigDaddyCryptoPortfolio.ViewModels
                 PortfolioEntryCount++;
             }
 
+            Coins.Add(coin);
+
             TotalCointCount++;
 
             UpdateIndicators();
@@ -128,6 +136,9 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CategoryIndicators)));
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Coins)));
+            //CollectionChanged?.Invoke(coin, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
         }
 
         public void RemoveCoin(Coin coin)
@@ -142,6 +153,8 @@ namespace BigDaddyCryptoPortfolio.ViewModels
                 PortfolioEntryCount--;
             }
 
+            Coins.Remove(coin);
+
             TotalCointCount--;
 
             UpdateIndicators();
@@ -153,6 +166,36 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CategoryIndicators)));
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Coins)));
+            //CollectionChanged?.Invoke(coin, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove));
+        }
+        public void UnselectAll()
+        {
+            for (int i = 0; i < CategoryIndicators.Count; i++)
+            {
+                CategoryIndicators[i].IsSelected = false;
+            }
+        }
+
+        public void SelectCategory(CoinCategory category)
+        {
+            if (category == CoinCategory.NoHype)
+            {
+                UnselectAll();
+                return;
+            }
+
+            var index = _categoryIndex[category];
+            CategoryIndicators[index].IsSelected = true;
+
+            for (int i = 0; i < CategoryIndicators.Count; i++)
+            {
+                if (i == index)
+                    continue;
+
+                CategoryIndicators[i].IsSelected = false;
+            }
         }
 
         private void UpdateIndicators()

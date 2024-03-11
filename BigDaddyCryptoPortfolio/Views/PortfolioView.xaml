@@ -11,7 +11,24 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:DoubleToPercentageStringConverter x:Key="DoubleToPercentageConverter"/>
+            <converters:StrokeColorConverter x:Key="StrokeColorConverter"/>
         </ResourceDictionary>
+
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                  Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
     </ContentPage.Resources>
 
     <ScrollView Orientation="Vertical">
@@ -90,8 +107,9 @@
                  Margin="5"
                  x:Name="PieChart" 
                  Interval="20" 
-                 Increment="0.025" 
-                 PercentileTapped="PercentileTapped">
+                 Increment="0.025"
+                 PercentileTapped="PieChart_PercentileTapped"
+                 PercentileNotTapped="PieChart_PercentileNotTapped">
                     <NsGraphics:NsPieChart.PieChartShadow>
                         <NsGraphics:NsPieChartShadow Color="#13161c"/>
                     </NsGraphics:NsPieChart.PieChartShadow>
@@ -119,8 +137,9 @@
                         </Border.StrokeShape>
                     </Border>
 
+                    <!-- Use CollectionView..-->
                     <!---->
-                    <Border Stroke="Transparent">
+                    <Border Stroke="{Binding CategoryIndicators[0].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -143,7 +162,7 @@
                     </Border>
 
                     <!---->
-                    <Border Stroke="Transparent" Grid.Row="1">
+                    <Border Stroke="{Binding CategoryIndicators[1].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="1">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -167,7 +186,7 @@
 
 
                     <!---->
-                    <Border Stroke="Transparent" Grid.Row="2">
+                    <Border Stroke="{Binding CategoryIndicators[2].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="2">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -191,7 +210,7 @@
 
 
                     <!---->
-                    <Border Stroke="Transparent" Grid.Row="3">
+                    <Border Stroke="{Binding CategoryIndicators[3].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="3">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -202,7 +221,7 @@
                             </LinearGradientBrush>
                         </Border.Background>
 
-                        <Grid ColumnDefinitions="50,*,*" Padding="10">
+                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
                             <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#00aa66">
                                 <Border.StrokeShape>
                                     <Ellipse/>
@@ -215,7 +234,7 @@
 
 
                     <!---->
-                    <Border Stroke="Transparent" Grid.Row="4">
+                    <Border Stroke="{Binding CategoryIndicators[4].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="4">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -239,7 +258,7 @@
 
 
                     <!---->
-                    <Border Stroke="Transparent" Grid.Row="5">
+                    <Border Stroke="{Binding CategoryIndicators[5].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="5">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -263,7 +282,7 @@
 
 
                     <!---->
-                    <Border Stroke="Transparent" Grid.Row="6">
+                    <Border Stroke="{Binding CategoryIndicators[6].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="6">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -287,7 +306,7 @@
 
 
                     <!---->
-                    <Border Stroke="Transparent" Grid.Row="7">
+                    <Border Stroke="{Binding CategoryIndicators[7].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="7">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -298,7 +317,7 @@
                             </LinearGradientBrush>
                         </Border.Background>
 
-                        <Grid ColumnDefinitions="50,*,*" Padding="10">
+                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
                             <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#8833bb">
                                 <Border.StrokeShape>
                                     <Ellipse/>
@@ -311,7 +330,7 @@
 
 
                     <!---->
-                    <Border Stroke="Transparent" Grid.Row="8">
+                    <Border Stroke="{Binding CategoryIndicators[8].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="8">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="20"/>
                         </Border.StrokeShape>
@@ -402,6 +421,53 @@
                     </Grid>
                 </Grid>
                 
+            </Grid>
+
+            <Grid RowDefinitions="Auto,500" Padding="10">
+                <Border BackgroundColor="#202530" Grid.RowSpan="2">
+                    <Border.Shadow>
+                        <Shadow Brush="White"/>
+                    </Border.Shadow>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+                <Label FontSize="Large" Text="{Binding Coins.Count, StringFormat='Portfolio ({0})'}" Margin="10"/>
+
+                <CollectionView x:Name="ListView" ItemsSource="{Binding Coins}" SelectionMode="Single" Grid.Row="1" Margin="5">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="5,5,5,0">
+                                <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, *">
+                                    <Border Grid.ColumnSpan="2" Grid.RowSpan="2" Stroke="Transparent">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="25"/>
+                                        </Border.StrokeShape>
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0">
+                                                <GradientStop Color="#202530" Offset="0.0" />
+                                                <GradientStop Color="#111826" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                    </Border>
+
+                                    <Border Stroke="Transparent">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="25"/>
+                                        </Border.StrokeShape>
+                                        <Image Grid.RowSpan="2" Aspect="AspectFill" WidthRequest="60" HeightRequest="60" Source="{Binding IconSource}"/>
+                                    </Border>
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" Padding="10, 10, 0, 0" Grid.Column="1">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                                        <Label Grid.Row="1" Text="{Binding Symbol}"/>
+                                        <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{Binding IsInPortfolio, StringFormat='Ist hinzugefügt worden: {0}'}" Margin="10" VerticalTextAlignment="Center"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
             </Grid>
         </VerticalStackLayout>
     </ScrollView>

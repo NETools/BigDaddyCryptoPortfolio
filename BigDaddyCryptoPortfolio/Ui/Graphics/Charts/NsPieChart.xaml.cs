@@ -48,6 +48,7 @@ public partial class NsPieChart : ContentView
     public NsPieChartShadow PieChartShadow { get; set; }
 
     public event Action<Percentile, Point> PercentileTapped;
+    public event Action PercentileNotTapped;
 
     public NsPieChart()
 	{
@@ -169,6 +170,7 @@ public partial class NsPieChart : ContentView
     private void OnPercnetileNotTapped()
     {
         _percentileInfoGrid.IsVisible = false;
+        PercentileNotTapped?.Invoke();
     }
 
     private bool _firstRender = true;

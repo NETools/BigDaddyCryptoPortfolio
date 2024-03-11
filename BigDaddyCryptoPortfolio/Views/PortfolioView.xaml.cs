@@ -47,8 +47,14 @@ public partial class PortfolioView : ContentPage
 
         DrawPieChart();
 
+        _portfolioViewModel.PropertyChanged += OnViewModelPropertyChanged;
     }
 
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == "Coins")
+            ListView.ItemsSource = _portfolioViewModel.Coins;
+    }
 
     private void OnPortfolioViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -73,15 +79,26 @@ public partial class PortfolioView : ContentPage
 				Label = _labels[category],
 				Percentage = assets.Count / (double)_portfolioViewModel.PortfolioEntryCount,
                 Size = .25,
-                Color = _colors[category]
-
+                Color = _colors[category],
+                Tag = category
             });
 
         }
 	}
 
-    private void PercentileTapped(Percentile percentile, Point point)
+    private void PieChart_PercentileTapped(Percentile percentile, Point point)
     {
+        var percentileCategory = percentile.Tag as CoinCategory?;
+        if (!percentileCategory.HasValue)
+            return;
 
+        var category = percentileCategory.Value;
+
+        _portfolioViewModel.SelectCategory(category);
+    }
+
+    private void PieChart_PercentileNotTapped()
+    {
+        _portfolioViewModel.UnselectAll();
     }
 }

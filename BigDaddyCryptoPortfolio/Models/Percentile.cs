@@ -12,5 +12,6 @@ namespace BigDaddyCryptoPortfolio.Models
         public double Percentage { get; set; }
         public double Size { get; set; }
         public Color? Color { get; set; }
+        public object Tag { get; set; }
     }
 }
