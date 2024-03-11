@@ -72,14 +72,17 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 		public CoinsViewModel(IPortfolioViewModel portfolioViewModel)
 		{
 			_portfolioViewModel = portfolioViewModel;
-			
-			LoadCoins();
-			SelectCategory(0);
+
+			Task.Run(async () =>
+			{
+				await LoadCoins();
+				SelectCategory(0);
+			});
 
 			ToolBarSettingsCommand = new BasicSettingsShowCommand();
         }
 
-		private async void LoadCoins()
+		private async Task LoadCoins()
 		{
 			using var stream = await FileSystem.OpenAppPackageFileAsync("CoinList.json");
 			using var streamReader = new StreamReader(stream);

@@ -122,6 +122,9 @@ namespace BigDaddyCryptoPortfolio.Adapters.Maths
 
         private double CalculateAllocationScore()
         {
+            if (portfolioViewModel.Assets.Count == 0)
+                return 0;
+
             var averageCategoryAllocation = 100.0 / portfolioViewModel.Assets.Count;
             var maxCategoryAllocation = 0.0;
             var minCategoryAllocation = 100.0;

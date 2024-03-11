@@ -158,6 +158,18 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         private void UpdateIndicators()
         {
 
+            if (Assets.Count == 0)
+            {
+                foreach (var indicator in CategoryIndicators)
+                {
+                    indicator.StartColor = Color.FromArgb("#1f232e");
+                    indicator.EndColor = Color.FromArgb("#1f232e");
+                    indicator.Percentage = 0;
+                }
+
+                return;
+            }
+
             foreach (var asset in Assets)
             {
                 var category = asset.Key;
