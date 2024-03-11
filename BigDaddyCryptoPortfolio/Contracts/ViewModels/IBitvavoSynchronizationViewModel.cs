@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 {
-    public interface ISettingsViewModel : INotifyPropertyChanged
+    public interface IBitvavoSynchronizationViewModel : INotifyPropertyChanged
     {
         public string ApiKey { get; set; } 
         public string ApiSecret { get; set; }

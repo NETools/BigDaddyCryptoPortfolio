@@ -53,11 +53,29 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             }
         }
 
+        public Color[] AllocationFullfillmentsIndicator { get; private set; } = new Color[5];
+
+        private int _totalCoins;
+        public int TotalCointCount
+        {
+            get => _totalCoins;
+            set
+            {
+                _totalCoins = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TotalCointCount)));
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public PortfolioViewModel()
         {
             _scoreCalculation = new ScoreCalculationAdapter(this);
+
+            for (int i = 0; i < AllocationFullfillmentsIndicator.Length; i++)
+            {
+                AllocationFullfillmentsIndicator[i] = Color.FromRgb(0, 0, 0);
+            }
         }
 
         public void AddCoin(Coin coin)
@@ -73,10 +91,15 @@ namespace BigDaddyCryptoPortfolio.ViewModels
                 PortfolioEntryCount++;
             }
 
+            TotalCointCount++;
+
+            _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
+
             _isDirty = true;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Assets)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Score)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
         }
 
         public void RemoveCoin(Coin coin)
@@ -90,10 +113,15 @@ namespace BigDaddyCryptoPortfolio.ViewModels
                 PortfolioEntryCount--;
             }
 
+            TotalCointCount--;
+
+            _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
+
             _isDirty = true;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Assets)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Score)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
         }
     }
 }

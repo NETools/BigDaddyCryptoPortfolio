@@ -37,15 +37,15 @@
 
 
     <ScrollView>
-        <Grid x:Name="CoinListContainer">
-            <Grid.RowDefinitions>
+        <VerticalStackLayout x:Name="CoinListContainer">
+            <!--<Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+            </Grid.RowDefinitions>-->
 
-            <Grid Grid.Row="0" Margin="10">
+            <Grid Margin="10">
                 <Border Stroke="#202530" BackgroundColor="#202530">
                     <Border.Shadow>
                         <Shadow Brush="{Binding SelectedCategoryColor}"/>
@@ -79,13 +79,8 @@
                 </Border>
             </Grid>
 
-            <Grid Grid.Row="1">
-                <CollectionView 
-x:Name="ListView" 
-ItemsSource="{Binding Coins}"
-SelectionChanged="ListView_SelectionChanged"
-SelectionMode="Single"
-MaximumHeightRequest="400">
+            <Grid>
+                <CollectionView x:Name="ListView" ItemsSource="{Binding Coins}" SelectionChanged="ListView_SelectionChanged" SelectionMode="Single" MaximumHeightRequest="400">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid Padding="5,5,5,0">
@@ -207,7 +202,17 @@ MaximumHeightRequest="400">
 
             </Grid>
 
-            <Grid Grid.Row="2" IsVisible="{Binding IsCoinSelected}" RowDefinitions="Auto, Auto">
+            <Grid>
+                <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0.15" BackgroundColor="#202530">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="25"/>
+                    </Border.StrokeShape>
+
+                    <Label Text="{Binding UiInfoMessage}" Padding="10" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
+            </Grid>
+
+            <Grid IsVisible="{Binding IsCoinSelected}" RowDefinitions="Auto, Auto">
                 <Border  
                 BackgroundColor="#202530" 
                 Margin="10" 
@@ -231,16 +236,6 @@ MaximumHeightRequest="400">
                     <Button x:Name="CourseDataButton" Text="Zeige Kursdaten" BackgroundColor="#0a0d14" Clicked="OnCourseDataButtonClicked"/>
                 </Border>
             </Grid>
-
-            <Grid Grid.Row="3" VerticalOptions="End">
-                <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0.15" BackgroundColor="#202530">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="25"/>
-                    </Border.StrokeShape>
-
-                    <Label Text="{Binding UiInfoMessage}" Padding="10" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center"/>
-                </Border>
-            </Grid>
-        </Grid>
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

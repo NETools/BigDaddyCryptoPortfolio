@@ -49,6 +49,7 @@ public partial class PortfolioView : ContentPage
 
     }
 
+
     private void OnPortfolioViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
 		if (e.PropertyName == nameof(_portfolioViewModel.Assets))

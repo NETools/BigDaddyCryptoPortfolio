@@ -1,18 +1,23 @@
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
+using BigDaddyCryptoPortfolio.ViewModels;
+using System.Net.WebSockets;
 
 namespace BigDaddyCryptoPortfolio.Views;
 
-public partial class SettingsView : ContentPage
+public partial class BitvavoSynchronizationView : ContentPage
 {
-	private ISettingsViewModel _settingsViewModel;
+	private IBitvavoSynchronizationViewModel _settingsViewModel;
 	private ICoinsViewModel _coinsViewModel;
 	private IPortfolioViewModel _portfolioViewModel;
 
-	public SettingsView(ISettingsViewModel settingsViewModel, ICoinsViewModel coinsViewModel, IPortfolioViewModel portfolioViewModel)
+	private IServiceProvider _serviceProvider;
+
+	public BitvavoSynchronizationView(IBitvavoSynchronizationViewModel settingsViewModel, ICoinsViewModel coinsViewModel, IPortfolioViewModel portfolioViewModel, IServiceProvider serviceProvider)
 	{
 		_portfolioViewModel = portfolioViewModel;
 		_settingsViewModel = settingsViewModel;
 		_coinsViewModel = coinsViewModel;
+		_serviceProvider = serviceProvider;	
 
 		InitializeComponent();
 
@@ -42,5 +47,19 @@ public partial class SettingsView : ContentPage
         await StatusBorder.TranslateTo(-20, 0);
         StatusBorder.IsVisible = false;
         await StatusBorder.TranslateTo(0, -20);
+    }
+
+    private async void OnDownloadCodeFromServerClicked(object sender, EventArgs e)
+    {
+		var websocket = new ClientWebSocket();
+		await websocket.ConnectAsync(new Uri("ws://178.25.225.236:8000/"), CancellationToken.None);
+
+		var codeLoader = new RemoteCodeLoader.RemoteCodeLoader(websocket);
+		codeLoader.AddLocalAssembly(typeof(ICoinsViewModel));
+		codeLoader.AddLocalAssembly(typeof(CoinsViewModel));
+
+		var page = await codeLoader.CreateXamlElement<ContentPage>(_serviceProvider);
+
+		await Navigation.PushAsync(page);
     }
 }

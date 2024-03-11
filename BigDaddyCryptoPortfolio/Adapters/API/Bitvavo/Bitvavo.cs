@@ -5,6 +5,7 @@ using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Authentication;
 using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Balance;
 using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Commands;
 using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Price;
+using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Trade;
 using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Networking;
 using BigDaddyCryptoPortfolio.Shared;
 using System.Net.Http.Headers;
@@ -96,7 +97,6 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Bitvavo
             _webSocketAuthed = response["authenticated"].GetValue<bool>();
             return _webSocketAuthed;
         }
-
         private async Task<JsonNode?> SendAndWait(string message, WebsocketResponseCodes code)
         {
             await _websocket.SendAsync(Encoding.UTF8.GetBytes(message), WebSocketMessageType.Text, true, CancellationToken.None);
@@ -111,6 +111,42 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Bitvavo
             return semaphore.Response;
         }
 
+
+        public async Task<IEnumerable<Trade>> Trades(string market)
+        {
+            var header = Create<Get>(10_000, "GET", $"/v2/trades?market={market}", null);
+            using var httpClient = new HttpClient();
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"https://api.bitvavo.com/v2/trades?market={market}");
+
+
+            AddHeaders(header, httpRequest.Headers);
+
+            using var response = await httpClient.SendAsync(httpRequest);
+            using var bodyStream = await response.Content.ReadAsStreamAsync();
+            var node = await JsonSerializer.DeserializeAsync<Trade[]>(bodyStream);
+
+            return node.AsEnumerable<Trade>();
+        }
+
+        public async Task<double> CalculateAverageSidePrice(string market, string side)
+        {
+            var trades = await Trades(market);
+            var priceSum = .0;
+            var totalTransactions = 0;
+            foreach (var trade in trades)
+            {
+                if (trade.Side.ToLower() != side.ToLower())
+                    continue;
+
+                var price = double.Parse(trade.Price.Replace(".", ","));
+                var amount = double.Parse(trade.Amount.Replace(".", ","));
+
+                priceSum += price * amount;
+                totalTransactions++;
+            }
+
+            return priceSum / (double)totalTransactions;
+        }
 
         public async Task<string?> SubscribeTicker(string action, params string[] markets)
         {

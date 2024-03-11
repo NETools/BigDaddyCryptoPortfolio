@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.ViewModels
 {
-    internal class SettingsViewModel : ISettingsViewModel
+    internal class BitvavoSynchronizationViewModel : IBitvavoSynchronizationViewModel
     {
         private Bitvavo _bitvavo;
 

@@ -12,6 +12,9 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
     public interface IPortfolioViewModel : INotifyPropertyChanged
     {
         public int PortfolioEntryCount { get; }
+        public int TotalCointCount { get; }
+
+        public Color[] AllocationFullfillmentsIndicator { get; }
         public IDictionary<CoinCategory, IList<Coin>> Assets { get; }
         public double Score { get; }
         public string EvaluationText { get; }

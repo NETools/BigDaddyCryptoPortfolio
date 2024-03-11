@@ -55,7 +55,7 @@ public partial class CoinsView : ContentPage
             StatusBorder.FadeTo(0);
             await StatusBorder.TranslateTo(-20, 0);
             StatusBorder.IsVisible = false;
-            StatusBorder.TranslateTo(0, -20);
+            await StatusBorder.TranslateTo(0, -20);
         }
     }
 

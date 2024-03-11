@@ -15,17 +15,17 @@ namespace BigDaddyCryptoPortfolio
 
         public override Element GetOrCreate(IServiceProvider services)
         {
-            var settingsViewModel = services.GetService<ISettingsViewModel>();
+            var settingsViewModel = services.GetService<IBitvavoSynchronizationViewModel>();
             var portfolioViewModel = services.GetService<IPortfolioViewModel>();
             var coinsViewModel = services.GetService<ICoinsViewModel>();
 
-            return new SettingsView(settingsViewModel, coinsViewModel, portfolioViewModel);    
+            return new BitvavoSynchronizationView(settingsViewModel, coinsViewModel, portfolioViewModel, services);    
         }
     }
 
     public partial class App : Application
 	{
-		public App(ICoinsViewModel coinsViewModel, IAppUiControl context, IPortfolioViewModel portfolioViewModel, ISettingsViewModel settingsViewModel)
+		public App(ICoinsViewModel coinsViewModel, IAppUiControl context, IPortfolioViewModel portfolioViewModel, IBitvavoSynchronizationViewModel settingsViewModel)
 		{
 			InitializeComponent();
 

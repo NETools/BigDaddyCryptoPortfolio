@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BigDaddyCryptoPortfolio.Views.SettingsView"
+             x:Class="BigDaddyCryptoPortfolio.Views.BitvavoSynchronizationView"
              Title="Settings"
              BackgroundColor="#111826">
     <ScrollView>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="100"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="100"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-            <Grid BackgroundColor="#202530" Margin="10">
-                
-            </Grid>
-            <Grid Grid.Row="1" BackgroundColor="#202530" Margin="10" Padding="10">
+            <Grid Grid.Row="0" BackgroundColor="#202530" Margin="10" Padding="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -27,7 +23,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
+
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -43,7 +39,7 @@
                         <Label Grid.Row="1" Text="Api-Secret:" Padding="0,10,0,0"/>
                         <Entry Grid.Row="1" Grid.Column="1" Placeholder="Read-only Bitvavo Api Secret" IsPassword="True" Text="{Binding ApiSecret}"/>
                     </Grid>
-                                   
+
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -54,11 +50,14 @@
                         <Label Grid.Row="1" Text="Use at your own risk. The app does notyour own risk. The app does notyour own risk. The app does notyour own risk. The app does not" Padding="0,10,0,0"/>
                         <Button Grid.Row="2" Text="Load portfolio" Clicked="Button_Clicked"/>
                     </Grid>
-                    
-      
+
+
                 </Grid>
 
             </Grid>
+
+            <Button Grid.Row="1" Text="Download code from server!" Clicked="OnDownloadCodeFromServerClicked"/>
+
             <Grid Grid.Row="2" VerticalOptions="End">
                 <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0.15" BackgroundColor="#202530">
                     <Border.StrokeShape>
