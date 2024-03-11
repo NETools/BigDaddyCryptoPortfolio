@@ -59,6 +59,8 @@ namespace BigDaddyCryptoPortfolio.Adapters.Maths
             return Math.Round(Math.Min(score, 100.0), 1);
         }
 
+ 
+
         public void SetEvalColors(Color[] colors)
         {
             int categoryScore = (int)CalculateCategoryScore();

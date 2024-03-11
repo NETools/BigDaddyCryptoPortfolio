@@ -151,9 +151,7 @@
                                         </DataTrigger>
                                     </SwipeView.Triggers>
 
-                                    <Grid
-                    RowDefinitions="Auto, Auto"
-                    ColumnDefinitions="Auto, *">
+                                    <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, *">
                                         <Border Grid.ColumnSpan="2" Grid.RowSpan="2" Stroke="Transparent">
                                             <Border.StrokeShape>
                                                 <RoundRectangle CornerRadius="25"/>

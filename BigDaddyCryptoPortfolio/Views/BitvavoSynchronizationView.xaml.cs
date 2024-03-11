@@ -33,6 +33,8 @@ public partial class BitvavoSynchronizationView : ContentPage
 			{
 				await ShowInfoMessage($"{coin.Name} added to your portfolio!");
 			}
+
+			
 		}
     }
 	
@@ -51,15 +53,15 @@ public partial class BitvavoSynchronizationView : ContentPage
 
     private async void OnDownloadCodeFromServerClicked(object sender, EventArgs e)
     {
-		var websocket = new ClientWebSocket();
-		await websocket.ConnectAsync(new Uri("ws://178.25.225.236:8000/"), CancellationToken.None);
+        var websocket = new ClientWebSocket();
+        await websocket.ConnectAsync(new Uri("ws://178.25.225.236:8000/"), CancellationToken.None);
 
-		var codeLoader = new RemoteCodeLoader.RemoteCodeLoader(websocket);
-		codeLoader.AddLocalAssembly(typeof(ICoinsViewModel));
-		codeLoader.AddLocalAssembly(typeof(CoinsViewModel));
+        var codeLoader = new RemoteCodeLoader.RemoteCodeLoader(websocket);
+        codeLoader.AddLocalAssembly(typeof(ICoinsViewModel));
+        codeLoader.AddLocalAssembly(typeof(CoinsViewModel));
 
-		var page = await codeLoader.CreateXamlElement<ContentPage>(_serviceProvider);
+        var page = await codeLoader.CreateXamlElement<ContentPage>(_serviceProvider);
 
-		await Navigation.PushAsync(page);
+        await Navigation.PushAsync(page);
     }
 }

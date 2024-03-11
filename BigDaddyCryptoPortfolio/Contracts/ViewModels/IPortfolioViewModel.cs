@@ -16,6 +16,7 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 
         public Color[] AllocationFullfillmentsIndicator { get; }
         public IDictionary<CoinCategory, IList<Coin>> Assets { get; }
+        public IList<CategoryIndicator> CategoryIndicators { get; }
         public double Score { get; }
         public string EvaluationText { get; }
 

@@ -16,6 +16,19 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         private bool _isDirty = true;
         private double _lastScore;
 
+        private Dictionary<CoinCategory, int> _categoryIndex = new Dictionary<CoinCategory, int>()
+        {
+            { CoinCategory.Ai, 0 },
+            { CoinCategory.Web3, 1 },
+            { CoinCategory.Defi, 2 },
+            { CoinCategory.Green, 3 },
+            { CoinCategory.Gaming, 4 },
+            { CoinCategory.BtcAssociates, 5 },
+            { CoinCategory.CBDCNetwork, 6 },
+            { CoinCategory.ECommerce, 7 },
+            { CoinCategory.Tokenization, 8 },
+        };
+
         private ScoreCalculationAdapter _scoreCalculation;
 
         public IDictionary<CoinCategory, IList<Coin>> Assets { get; set; } = new Dictionary<CoinCategory, IList<Coin>>();
@@ -66,6 +79,8 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             }
         }
 
+        public IList<CategoryIndicator> CategoryIndicators { get; private set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public PortfolioViewModel()
@@ -75,6 +90,17 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             for (int i = 0; i < AllocationFullfillmentsIndicator.Length; i++)
             {
                 AllocationFullfillmentsIndicator[i] = Color.FromRgb(0, 0, 0);
+            }
+
+            CategoryIndicators = new List<CategoryIndicator>();
+            for (int i = 0; i < 9; i++)
+            {
+                CategoryIndicators.Add(new CategoryIndicator()
+                {
+                    StartColor = Color.FromArgb("#1f232e"),
+                    EndColor = Color.FromArgb("#1f232e"),
+                    Percentage = 0.0
+                });
             }
         }
 
@@ -93,6 +119,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
             TotalCointCount++;
 
+            UpdateIndicators();
             _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
 
             _isDirty = true;
@@ -100,6 +127,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Score)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CategoryIndicators)));
         }
 
         public void RemoveCoin(Coin coin)
@@ -110,11 +138,13 @@ namespace BigDaddyCryptoPortfolio.ViewModels
                 Assets[category].Remove(coin);
                 if (Assets[category].Count == 0)
                     Assets.Remove(category);
+                
                 PortfolioEntryCount--;
             }
 
             TotalCointCount--;
 
+            UpdateIndicators();
             _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
 
             _isDirty = true;
@@ -122,6 +152,33 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Score)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CategoryIndicators)));
+        }
+
+        private void UpdateIndicators()
+        {
+
+            foreach (var asset in Assets)
+            {
+                var category = asset.Key;
+
+                if (category == CoinCategory.NoHype)
+                    continue;
+
+                var assets = asset.Value;
+                var percentage = assets.Count / (double)PortfolioEntryCount;
+
+                var categoryIndex = _categoryIndex[category];
+                var categoryIndicator = CategoryIndicators[categoryIndex];
+
+                categoryIndicator.Percentage = percentage;
+                categoryIndicator.StartColor = Color.FromArgb("#073507");
+
+                if (assets.Count > 1)
+                    categoryIndicator.EndColor = Color.FromArgb("#073507");
+
+
+            }
         }
     }
 }
