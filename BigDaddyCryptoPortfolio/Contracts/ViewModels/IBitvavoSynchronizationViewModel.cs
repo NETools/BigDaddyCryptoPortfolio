@@ -1,4 +1,5 @@
-﻿using BigDaddyCryptoPortfolio.Models;
+﻿using BigDaddyCryptoPortfolio.Contracts.Adapters;
+using BigDaddyCryptoPortfolio.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +15,7 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
         public string ApiSecret { get; set; }
 
         public Task<bool> Authorize();
-        public IAsyncEnumerable<Coin> SynchronizePortfolio(ICoinsViewModel coinsViewModel, IPortfolioViewModel portfolioViewModel);
+        public IAsyncEnumerable<Coin> SynchronizePortfolio(ICoinDataProvider coinDataProvider, ICoinsViewModel coinsViewModel);
 
     }
 

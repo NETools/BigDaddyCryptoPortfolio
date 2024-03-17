@@ -1,4 +1,6 @@
-﻿using BigDaddyCryptoPortfolio.Contracts.AppControls;
+﻿using BigDaddyCryptoPortfolio.Adapters.Data;
+using BigDaddyCryptoPortfolio.Contracts.Adapters;
+using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.ViewModels;
 using BigDaddyCryptoPortfolio.ViewModels.Controllers;
@@ -19,6 +21,8 @@ namespace BigDaddyCryptoPortfolio.DI
 			appBuilder.Services.AddSingleton<IBitvavoSynchronizationViewModel, BitvavoSynchronizationViewModel>();
 
 			appBuilder.Services.AddSingleton<IAppUiControl, AppUiController>();
+
+			appBuilder.Services.AddSingleton<ICoinDataProvider, CoinDataProvider>();
 		
             return appBuilder;
 		}

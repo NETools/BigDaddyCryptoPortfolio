@@ -81,6 +81,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Ui\InfoViews\AssetListView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Ui\InfoViews\RevenueView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Ui\MiniViews\CoinCollectionView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

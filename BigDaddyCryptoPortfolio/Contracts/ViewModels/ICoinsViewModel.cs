@@ -16,17 +16,14 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 		public bool IsCategorySelectorExpanded { get; set; }
 		public string SelectedCategory { get; set; }	
 
-        public List<Coin> Coins { get; }
+        public IList<Coin> SelectedCategoryCoins { get; }
 		public Coin? SelectedCoin { get; }
 		public string UiInfoMessage { get; }
 
         public void SelectCategory(int index);
 		public void SelectCoin(Coin coin);
-		public void AddCoin(Coin coin);
-		public void DeleteCoin(Coin coin);
 
-		public Coin? FindCoin(string symbol);
-
-		// public void SetIndices(int startIndex, int endIndex);
+		public void AddCoin(string symbol);
+		public void DeleteCoin(string symbol);
 	}
 }

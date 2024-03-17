@@ -1,7 +1,9 @@
-﻿using BigDaddyCryptoPortfolio.Contracts.AppControls;
+﻿using BigDaddyCryptoPortfolio.Contracts.Adapters;
+using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.ViewModels.Commands.CoinsView;
+using CommunityToolkit.Maui.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,9 +23,9 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 	
 		private CoinCategory _selectedCategory;
 		private IPortfolioViewModel _portfolioViewModel;
+		private ICoinDataProvider _coinDataProvider;
 
-        private List<Coin> _coins = new List<Coin>();
-		public List<Coin> Coins => _coins.FindAll(p => (p.Category & _selectedCategory) == _selectedCategory);
+		public IList<Coin> SelectedCategoryCoins => _coinDataProvider.SelectByCategory(this, _selectedCategory).ToList();
 
 		public List<string> Categories { get; private set; } = 
 			["AI", 
@@ -69,28 +71,24 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-		public CoinsViewModel(IPortfolioViewModel portfolioViewModel)
+		public CoinsViewModel(IPortfolioViewModel portfolioViewModel, ICoinDataProvider coinDataProvider)
 		{
+			_coinDataProvider = coinDataProvider;
+            _coinDataProvider.CoinsLoaded += OnCoinsLoaded;
+
 			_portfolioViewModel = portfolioViewModel;
 
-			Task.Run(async () =>
-			{
-				await LoadCoins();
-				SelectCategory(0);
-			});
+            SelectCategory(0);
 
-			ToolBarSettingsCommand = new BasicSettingsShowCommand();
+            ToolBarSettingsCommand = new BasicSettingsShowCommand();
         }
 
-		private async Task LoadCoins()
-		{
-			using var stream = await FileSystem.OpenAppPackageFileAsync("CoinList.json");
-			using var streamReader = new StreamReader(stream);
-			var json = await streamReader.ReadToEndAsync();
-			_coins = new List<Coin>(JsonSerializer.Deserialize<List<Coin>>(json));
+        private void OnCoinsLoaded()
+        {
+            SelectCategory(0);
         }
 
-		public void SelectCategory(int index)
+        public void SelectCategory(int index)
 		{
 			_selectedCategory = (CoinCategory)(1 << index);
 			if (SelectedCoin != null)
@@ -101,50 +99,52 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 			SelectedCategory = Categories[index];
 
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCategorySelectorExpanded)));
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Coins)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCategoryCoins)));
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCategory)));
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCategoryColor)));
 		}
 
-		public void AddCoin(Coin coin)
+		public void AddCoin(string symbol)
 		{
+			var coin = _coinDataProvider.ResolveSymbol(this, symbol);
+
+			if (!_portfolioViewModel.AddCoin(coin.Symbol))
+				return;
+
 			coin.IsInPortfolio = true;
 			coin.IsNotInPortfolio = false;
 			coin.IsSelected = false;
-
-			_portfolioViewModel.AddCoin(coin);
 
 			UiInfoMessage = $"{coin.Name} added to portfolio!";
 
             SelectedCoin = null;
 		}
 
-		public void SelectCoin(Coin coin)
+		public void DeleteCoin(string symbol)
 		{
-			if (SelectedCoin != null && coin != SelectedCoin)
-				SelectedCoin.IsSelected = false;
-			
-			SelectedCoin = coin;
-			SelectedCoin.IsSelected = true;
+			var coin = _coinDataProvider.ResolveSymbol(this, symbol);
 
-		}
+			if (!_portfolioViewModel.RemoveCoin(coin.Symbol))
+				return;
 
-		public void DeleteCoin(Coin coin)
-		{
 			coin.IsInPortfolio = false;
 			coin.IsNotInPortfolio = true;
 			coin.IsSelected = false;
-
-			_portfolioViewModel.RemoveCoin(coin);
 
             UiInfoMessage = $"{coin.Name} removed from portfolio!";
 
             SelectedCoin = null;
 		}
 
-        public Coin? FindCoin(string symbol)
+        public void SelectCoin(Coin coin)
         {
-			return _coins.Find(p => p.Symbol.ToLower() == symbol.ToLower());
+            if (SelectedCoin != null && coin != SelectedCoin)
+                SelectedCoin.IsSelected = false;
+
+            SelectedCoin = coin;
+            SelectedCoin.IsSelected = true;
+
         }
+
     }
 }

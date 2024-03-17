@@ -1,4 +1,5 @@
-﻿using BigDaddyCryptoPortfolio.Contracts.AppControls;
+﻿using BigDaddyCryptoPortfolio.Contracts.Adapters;
+using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Views;
 using System.Collections.Specialized;
@@ -19,15 +20,18 @@ namespace BigDaddyCryptoPortfolio
             var portfolioViewModel = services.GetService<IPortfolioViewModel>();
             var coinsViewModel = services.GetService<ICoinsViewModel>();
 
-            return new BitvavoSynchronizationView(settingsViewModel, coinsViewModel, portfolioViewModel, services);    
+            var coinDataProvider = services.GetService<ICoinDataProvider>();
+
+            return new BitvavoSynchronizationView(settingsViewModel, coinsViewModel, portfolioViewModel, services, coinDataProvider);    
         }
     }
 
     public partial class App : Application
 	{
-		public App(ICoinsViewModel coinsViewModel, IAppUiControl context, IPortfolioViewModel portfolioViewModel, IBitvavoSynchronizationViewModel settingsViewModel)
+		public App(ICoinsViewModel coinsViewModel, IAppUiControl context, IPortfolioViewModel portfolioViewModel, IBitvavoSynchronizationViewModel settingsViewModel, IServiceProvider serviceProvider, ICoinDataProvider coinDataProvider)
 		{
 			InitializeComponent();
+            coinDataProvider.LoadCoins();
 
             context.AddTabRequested += OnAddTabRequested;
 
@@ -38,7 +42,7 @@ namespace BigDaddyCryptoPortfolio
 			{
 				Title = "Coins",
 				Route = "CoinsView",
-				ContentTemplate = new DataTemplate(() => new CoinsView(coinsViewModel)),
+				ContentTemplate = new DataTemplate(() => new CoinsView(coinsViewModel, serviceProvider)),
 			});
 
             Tabs.Items.Add(new ShellContent()
@@ -52,7 +56,7 @@ namespace BigDaddyCryptoPortfolio
 			{
 				Title = "Portfolio",
 				Route = "PortfolioView",
-				ContentTemplate = new DataTemplate(() => new PortfolioView(portfolioViewModel))
+				ContentTemplate = new DataTemplate(() => new PortfolioView(coinsViewModel, portfolioViewModel))
 			});
 		}
 

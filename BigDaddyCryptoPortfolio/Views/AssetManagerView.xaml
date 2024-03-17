@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:InfoViws="clr-namespace:BigDaddyCryptoPortfolio.Ui.InfoViews"
              x:Class="BigDaddyCryptoPortfolio.Views.AssetManagerView"
              Title="Asset Manager"
              BackgroundColor="#111826">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="5">
+            <Grid RowDefinitions="Auto,*" Padding="10">
+                <Border BackgroundColor="#202530" Grid.RowSpan="2">
+                    <Border.Shadow>
+                        <Shadow Brush="White"/>
+                    </Border.Shadow>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+
+                <Label FontSize="Large" Text="Ziele" Margin="10"/>
+                <InfoViws:RevenueView Grid.Row="1" Margin="10"/>
+
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
      
 </ContentPage>

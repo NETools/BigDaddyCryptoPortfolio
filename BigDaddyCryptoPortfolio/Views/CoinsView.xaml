@@ -4,6 +4,7 @@
              x:Class="BigDaddyCryptoPortfolio.Views.CoinsView"
              xmlns:converters="clr-namespace:BigDaddyCryptoPortfolio.Converters"
              xmlns:mtc="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:ui="clr-namespace:BigDaddyCryptoPortfolio.Ui.InfoViews"
              Title="Coins"
              BackgroundColor="#111826"
              Shell.ForegroundColor="White">
@@ -73,125 +74,11 @@
                 </Border>
             </Grid>
 
-            <CollectionView x:Name="ListView" ItemsSource="{Binding Coins}" SelectionChanged="ListView_SelectionChanged" SelectionMode="Single" MaximumHeightRequest="400">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="5,5,5,0">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnElementClickedWindows"/>
-                            </Grid.GestureRecognizers>
-
-                            <SwipeView FlowDirection="MatchParent">
-                                <SwipeView.Triggers>
-                                    <DataTrigger TargetType="SwipeView">
-                                        <DataTrigger.Binding>
-                                            <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
-                                                <Binding Path="IsInPortfolio" />
-                                                <Binding Path="IsSelected" />
-                                            </MultiBinding>
-                                        </DataTrigger.Binding>
-
-                                        <DataTrigger.Value>
-                                            <x:Boolean>True</x:Boolean>
-                                        </DataTrigger.Value>
-
-                                        <Setter Property="LeftItems">
-                                            <Setter.Value>
-                                                <SwipeItems>
-                                                    <SwipeItemView Invoked="DeleteInvoked">
-                                                        <Grid WidthRequest="100">
-                                                            <Border BackgroundColor="#2a2f3a" Stroke="Transparent">
-                                                                <Border.StrokeShape>
-                                                                    <RoundRectangle CornerRadius="25"/>
-                                                                </Border.StrokeShape>
-                                                            </Border>
-                                                            <Label BackgroundColor="Transparent" Text="Entfernen" VerticalOptions="Center" FontAttributes="Bold" FontSize="15" HorizontalOptions="Center" />
-                                                        </Grid>
-                                                    </SwipeItemView>
-                                                </SwipeItems>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-
-                                    <DataTrigger TargetType="SwipeView">
-                                        <DataTrigger.Binding>
-                                            <MultiBinding Converter="{StaticResource MultiBooleanConverter}">
-                                                <Binding Path="IsNotInPortfolio" />
-                                                <Binding Path="IsSelected" />
-                                            </MultiBinding>
-                                        </DataTrigger.Binding>
-
-                                        <DataTrigger.Value>
-                                            <x:Boolean>True</x:Boolean>
-                                        </DataTrigger.Value>
-
-                                        <Setter Property="RightItems">
-                                            <Setter.Value>
-                                                <SwipeItems>
-                                                    <SwipeItemView Invoked="AddInvoked">
-                                                        <Grid WidthRequest="100">
-                                                            <Border BackgroundColor="#2a2f3a" Stroke="Transparent">
-                                                                <Border.StrokeShape>
-                                                                    <RoundRectangle CornerRadius="25"/>
-                                                                </Border.StrokeShape>
-                                                            </Border>
-                                                            <Label BackgroundColor="Transparent" Text="Hinzufügen" VerticalOptions="Center" FontAttributes="Bold" FontSize="15" HorizontalOptions="Center" />
-                                                        </Grid>
-                                                    </SwipeItemView>
-                                                </SwipeItems>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </SwipeView.Triggers>
-
-                                <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, *">
-                                    <Border Grid.ColumnSpan="2" Grid.RowSpan="2" Stroke="Transparent">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="25"/>
-                                        </Border.StrokeShape>
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0">
-                                                <GradientStop Color="#202530" Offset="0.0" />
-                                                <GradientStop Color="#111826" Offset="1.0" />
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                    </Border>
-
-                                    <Border Grid.ColumnSpan="2" Grid.RowSpan="2" IsVisible="{Binding IsSelected}" BackgroundColor="Transparent" StrokeThickness="5" Stroke="#2a2f3a">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="25"/>
-                                        </Border.StrokeShape>
-
-                                    </Border>
-
-                                    <Border Stroke="Transparent">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="25"/>
-                                        </Border.StrokeShape>
-                                        <Image
-                            Grid.RowSpan="2"
-                            Aspect="AspectFill"
-                            WidthRequest="60"
-                            HeightRequest="60"
-                            Source="{Binding IconSource}"/>
-                                    </Border>
-                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" Padding="10, 10, 0, 0" Grid.Column="1">
-                                        <Label
-                            Text="{Binding Name}"
-                            FontAttributes="Bold"/>
-                                        <Label
-                            Grid.Row="1"
-                            Text="{Binding Symbol}"/>
-                                        <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{Binding IsInPortfolio, StringFormat='Ist hinzugefügt worden: {0}'}" Margin="10" VerticalTextAlignment="Center"/>
-                                    </Grid>
-                                </Grid>
-                            </SwipeView>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-
+            <ui:AssetListView x:Name="AssetsView" MaximumHeightRequest="400">
+                <ui:AssetListView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnElementClickedWindows"/>
+                </ui:AssetListView.GestureRecognizers>
+            </ui:AssetListView>
 
             <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0.15" BackgroundColor="#202530">
                 <Border.StrokeShape>

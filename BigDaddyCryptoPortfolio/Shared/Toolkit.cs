@@ -1,4 +1,7 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Authentication;
+using BigDaddyCryptoPortfolio.Algorithms.Hash;
+using BigDaddyCryptoPortfolio.Contracts.Algorithms;
+using BigDaddyCryptoPortfolio.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,6 +15,13 @@ namespace BigDaddyCryptoPortfolio.Shared
 {
     public static class Toolkit
     {
+        public static Dictionary<CredentialType, IHash> HashingAlgorithms { get; private set; } = new Dictionary<CredentialType, IHash>()
+        {
+            { CredentialType.Md5, new HashMd5() },
+            { CredentialType.Sha512, new Hash256() },
+            { CredentialType.NoHash, null }
+        };
+
         public static string ToHex(this byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
@@ -37,5 +47,25 @@ namespace BigDaddyCryptoPortfolio.Shared
 
             return hmac.ComputeHash(Encoding.UTF8.GetBytes(digestBuilder.ToString())).ToHex();
         }
+
+        public static T? Copy<T>(T source)
+        {
+            if (source == null)
+                return default;
+
+            var type = typeof(T);
+            var deepCopy = (T)Activator.CreateInstance(type)!;
+
+            var properties = type.GetProperties();
+
+            foreach (var property in properties)
+            {
+                var value = property.GetValue(source);
+                property.SetValue(deepCopy, value, null);
+            }
+
+            return deepCopy;
+        }
+
     }
 }

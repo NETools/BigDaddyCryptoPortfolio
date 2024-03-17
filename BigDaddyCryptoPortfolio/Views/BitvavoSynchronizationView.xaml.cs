@@ -1,3 +1,4 @@
+using BigDaddyCryptoPortfolio.Contracts.Adapters;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.ViewModels;
 using System.Net.WebSockets;
@@ -10,10 +11,13 @@ public partial class BitvavoSynchronizationView : ContentPage
 	private ICoinsViewModel _coinsViewModel;
 	private IPortfolioViewModel _portfolioViewModel;
 
+	private ICoinDataProvider _coinDataProvider;
+
 	private IServiceProvider _serviceProvider;
 
-	public BitvavoSynchronizationView(IBitvavoSynchronizationViewModel settingsViewModel, ICoinsViewModel coinsViewModel, IPortfolioViewModel portfolioViewModel, IServiceProvider serviceProvider)
+	public BitvavoSynchronizationView(IBitvavoSynchronizationViewModel settingsViewModel, ICoinsViewModel coinsViewModel, IPortfolioViewModel portfolioViewModel, IServiceProvider serviceProvider, ICoinDataProvider coinDataProvider)
 	{
+		_coinDataProvider = coinDataProvider;
 		_portfolioViewModel = portfolioViewModel;
 		_settingsViewModel = settingsViewModel;
 		_coinsViewModel = coinsViewModel;
@@ -29,7 +33,7 @@ public partial class BitvavoSynchronizationView : ContentPage
 		var authorized = await _settingsViewModel.Authorize();
 		if (authorized)
 		{
-            await foreach(var coin in _settingsViewModel.SynchronizePortfolio(_coinsViewModel, _portfolioViewModel))
+            await foreach(var coin in _settingsViewModel.SynchronizePortfolio(_coinDataProvider, _coinsViewModel))
 			{
 				await ShowInfoMessage($"{coin.Name} added to your portfolio!");
 			}
@@ -60,7 +64,7 @@ public partial class BitvavoSynchronizationView : ContentPage
         codeLoader.AddLocalAssembly(typeof(ICoinsViewModel));
         codeLoader.AddLocalAssembly(typeof(CoinsViewModel));
 
-        var page = await codeLoader.CreateXamlElement<ContentPage>(_serviceProvider);
+        var page = await codeLoader.CreateXamlElement<ContentPage>("rcns://views/contentpages/demo.xaml", _serviceProvider);
 
         await Navigation.PushAsync(page);
     }

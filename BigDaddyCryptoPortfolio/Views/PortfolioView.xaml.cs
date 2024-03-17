@@ -1,6 +1,10 @@
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
+using BigDaddyCryptoPortfolio.Converters;
+using BigDaddyCryptoPortfolio.Gestures;
 using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Ui.Graphics.Charts;
+using BigDaddyCryptoPortfolio.Ui.InfoViews;
+using Microsoft.Maui.Controls.Shapes;
 using System.ComponentModel;
 
 namespace BigDaddyCryptoPortfolio.Views;
@@ -8,6 +12,9 @@ namespace BigDaddyCryptoPortfolio.Views;
 public partial class PortfolioView : ContentPage
 {
 	private IPortfolioViewModel _portfolioViewModel;
+    private ICoinsViewModel _coinsViewModel;
+    private TappingCountDetection<AssetListView> _buttonTapDetection;
+
     private Dictionary<CoinCategory, Color> _colors = new Dictionary<CoinCategory, Color>()
     {
         { CoinCategory.BtcAssociates, Color.FromArgb("#e61") },
@@ -36,24 +43,89 @@ public partial class PortfolioView : ContentPage
         { CoinCategory.ECommerce, "E-Commerce" }
     };
 
-    public PortfolioView(IPortfolioViewModel portfolioViewModel)
+    public PortfolioView(ICoinsViewModel coinsViewModel, IPortfolioViewModel portfolioViewModel)
 	{
+        _coinsViewModel = coinsViewModel;
 		_portfolioViewModel = portfolioViewModel;
         _portfolioViewModel.PropertyChanged += OnPortfolioViewModelPropertyChanged;
 
 		InitializeComponent();
+        AssetListView.Assets = _portfolioViewModel.Coins;
+        AssetListView.SwipeViewGenerator = () =>
+        {
+            var swipeView = new SwipeView();
+
+            var deleteSwipeItem = new SwipeItemView();
+            deleteSwipeItem.Invoked += DeleteSwipeItem_Invoked;
+
+            var deleteSwipeItemGrid = new Grid()
+            {
+                WidthRequest = 100
+            };
+            var deleteSwipeItemGridBorder = new Border()
+            {
+                BackgroundColor = Color.FromArgb("#2a2f3a"),
+                Stroke = Color.Parse("Transparent"),
+                StrokeShape = new RoundRectangle()
+                {
+                    CornerRadius = 25
+                }
+            };
+
+            var deleteLabel = new Label()
+            {
+                BackgroundColor = Color.Parse("Transparent"),
+                Text = "Entfernen",
+                VerticalOptions = LayoutOptions.Center,
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 15,
+                HorizontalOptions = LayoutOptions.Center
+            };
+
+            deleteSwipeItemGrid.Add(deleteSwipeItemGridBorder);
+            deleteSwipeItemGrid.Add(deleteLabel);
+
+            deleteSwipeItem.Content = deleteSwipeItemGrid;
+
+            swipeView.Triggers.Add(new DataTrigger(typeof(SwipeView))
+            {
+                Binding = new MultiBinding()
+                {
+                    Converter = new MultiBooleanConverter(),
+                    Bindings =
+                    {
+                        new Binding("IsSelected")
+                    }
+                },
+                Value = true,
+                Setters =
+                {
+                    new Setter()
+                    {
+                        Property = SwipeView.LeftItemsProperty,
+                        Value = new SwipeItems
+                        {
+                            deleteSwipeItem
+                        }
+                    }
+                }
+            });
+
+            return swipeView;
+        };
+        AssetListView.InitView();
 
         BindingContext = _portfolioViewModel;
 
-        DrawPieChart();
+        _buttonTapDetection = new TappingCountDetection<AssetListView>();
+        _buttonTapDetection.Register(AssetListView, 2, 100);
 
-        _portfolioViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        DrawPieChart();
     }
 
-    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void DeleteSwipeItem_Invoked(object? sender, EventArgs e)
     {
-        if (e.PropertyName == "Coins")
-            ListView.ItemsSource = _portfolioViewModel.Coins;
+        _coinsViewModel.DeleteCoin(AssetListView.SelectedCoin.Symbol);
     }
 
     private void OnPortfolioViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -100,5 +172,21 @@ public partial class PortfolioView : ContentPage
     private void PieChart_PercentileNotTapped()
     {
         _portfolioViewModel.UnselectAll();
+    }
+
+    private void OnElementClickedWindows(object sender, TappedEventArgs e)
+    {
+        if (DeviceInfo.Current.Platform != DevicePlatform.WinUI)
+        {
+            return;
+        }
+        var selectedCoin = AssetListView.SelectedCoin;
+
+        _buttonTapDetection.HandleTapping(AssetListView, AssetListView.SelectedCoin, () =>
+        {
+            if (selectedCoin == null)
+                return;
+            _coinsViewModel.DeleteCoin(AssetListView.SelectedCoin.Symbol);
+        });
     }
 }

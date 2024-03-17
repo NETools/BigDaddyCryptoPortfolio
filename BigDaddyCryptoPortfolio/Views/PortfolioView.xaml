@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BigDaddyCryptoPortfolio.Views.PortfolioView"
+             xmlns:InfoViews="clr-namespace:BigDaddyCryptoPortfolio.Ui.InfoViews"
              xmlns:NsGraphics="clr-namespace:BigDaddyCryptoPortfolio.Ui.Graphics.Charts"
              xmlns:ChartText="clr-namespace:BigDaddyCryptoPortfolio.Models"
              xmlns:converters="clr-namespace:BigDaddyCryptoPortfolio.Converters"
@@ -12,23 +13,8 @@
         <ResourceDictionary>
             <converters:DoubleToPercentageStringConverter x:Key="DoubleToPercentageConverter"/>
             <converters:StrokeColorConverter x:Key="StrokeColorConverter"/>
+            <converters:MultiBooleanConverter x:Key="MultiBooleanConverter"/>
         </ResourceDictionary>
-
-        <Style TargetType="Grid">
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal" />
-                        <VisualState x:Name="Selected">
-                            <VisualState.Setters>
-                                <Setter Property="BackgroundColor"
-                                  Value="Transparent" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
-        </Style>
     </ContentPage.Resources>
 
     <ScrollView Orientation="Vertical">
@@ -45,7 +31,8 @@
                 </Border>
                 
                 <Label FontSize="Large" Text="Portfolio-Überblick" Margin="10"/>
-                <Grid Grid.Row="1" RowDefinitions="*,*,*" Margin="10" Padding="40">
+                <InfoViews:RevenueView Grid.Row="10" Margin="10"/>
+                <!--<Grid Grid.Row="1" RowDefinitions="*,*,*" Margin="10" Padding="40">
 
 
                     <Grid Grid.Row="0" ColumnDefinitions="*,*" Padding="5">
@@ -85,7 +72,7 @@
                         <Label Text="0,00 €" Margin="2.5" Padding="5" FontSize="Small" Grid.Row="1" Grid.Column="1"/>
 
                     </Grid>
-                </Grid>
+                </Grid>-->
                 
             </Grid>
 
@@ -137,220 +124,38 @@
                         </Border.StrokeShape>
                     </Border>
 
-                    <!-- Use CollectionView..-->
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[0].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[0].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[0].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-
-                        <Grid ColumnDefinitions="50,*,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#FFD700">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Text="AI" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[0].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End"  Grid.Column="2"/>
-                        </Grid>
-                    </Border>
-
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[1].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="1">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[1].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[1].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-
-                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#DC143C">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Grid.Row="1" Text="Web3/Anonymität" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[1].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End"  Grid.Column="2"/>
-                        </Grid>
-                    </Border>
+                    <!-- Use CollectionView-->
 
 
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[2].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="2">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[2].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[2].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
+                    <CollectionView ItemsSource="{Binding CategoryIndicators}" Margin="10">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Stroke="{Binding IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20"/>
+                                    </Border.StrokeShape>
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0">
+                                            <GradientStop Color="{Binding StartColor}" Offset="0.0" />
+                                            <GradientStop Color="{Binding EndColor}" Offset="1.0" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
 
-                        <Grid ColumnDefinitions="50,*,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#1155bb">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Grid.Row="2" Text="DeFi" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[2].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="2"/>
-                        </Grid>
-                    </Border>
-
-
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[3].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="3">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[3].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[3].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-
-                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#00aa66">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Grid.Row="3" Text="Grüne Coins" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[3].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="2"/>
-                        </Grid>
-                    </Border>
-
-
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[4].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="4">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[4].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[4].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-
-                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#00BFFF">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Grid.Row="4" Text="Gaming/Metaverse" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[4].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End"  Grid.Column="2"/>
-                        </Grid>
-                    </Border>
-
-
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[5].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="5">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[5].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[5].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-
-                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#FF9900">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Grid.Row="5" Text="BTC-Zusammenhang" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[5].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End" Grid.Column="2"/>
-                        </Grid>
-                    </Border>
-
-
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[6].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="6">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[6].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[6].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-
-                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#667788">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Grid.Row="6" Text="CBDC-Netzwerke" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[6].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End"  Grid.Column="2"/>
-                        </Grid>
-                    </Border>
-
-
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[7].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="7">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[7].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[7].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-
-                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#8833bb">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Grid.Row="7" Text="eCommerce" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[7].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End"  Grid.Column="2"/>
-                        </Grid>
-                    </Border>
-
-
-                    <!---->
-                    <Border Stroke="{Binding CategoryIndicators[8].IsSelected, Converter={StaticResource StrokeColorConverter}, ConverterParameter='#00000000,#141714'}" Grid.Row="8">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="20"/>
-                        </Border.StrokeShape>
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0">
-                                <GradientStop Color="{Binding CategoryIndicators[8].StartColor}" Offset="0.0" />
-                                <GradientStop Color="{Binding CategoryIndicators[8].EndColor}" Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-
-                        <Grid ColumnDefinitions="50,Auto,*" Padding="10">
-                            <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="#ff5aac">
-                                <Border.StrokeShape>
-                                    <Ellipse/>
-                                </Border.StrokeShape>
-                            </Border>
-                            <Label Grid.Row="8" Text="Tokenisierung/NFTs" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
-                            <Label Text="{Binding CategoryIndicators[8].Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End"  Grid.Column="2"/>
-                        </Grid>
-                    </Border>
+                                    <Grid ColumnDefinitions="50,*,*" Padding="10">
+                                        <Border WidthRequest="14" HeightRequest="14" VerticalOptions="Center" BackgroundColor="{Binding CategoryColor}">
+                                            <Border.StrokeShape>
+                                                <Ellipse/>
+                                            </Border.StrokeShape>
+                                        </Border>
+                                        <Label Text="{Binding CategoryName}" Margin="2.5" Padding="5" FontSize="16" Grid.Column="1"/>
+                                        <Label Text="{Binding Percentage, Converter={StaticResource DoubleToPercentageConverter}}" VerticalOptions="Center" HorizontalOptions="End"  Grid.Column="2"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    
+                 
 
                 </Grid>
 
@@ -433,41 +238,11 @@
                     </Border.StrokeShape>
                 </Border>
                 <Label FontSize="Large" Text="{Binding Coins.Count, StringFormat='Portfolio ({0})'}" Margin="10"/>
-
-                <CollectionView x:Name="ListView" ItemsSource="{Binding Coins}" SelectionMode="Single" Grid.Row="1" Margin="5">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Padding="5,5,5,0">
-                                <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, *">
-                                    <Border Grid.ColumnSpan="2" Grid.RowSpan="2" Stroke="Transparent">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="25"/>
-                                        </Border.StrokeShape>
-                                        <Border.Background>
-                                            <LinearGradientBrush StartPoint="0,0">
-                                                <GradientStop Color="#202530" Offset="0.0" />
-                                                <GradientStop Color="#111826" Offset="1.0" />
-                                            </LinearGradientBrush>
-                                        </Border.Background>
-                                    </Border>
-
-                                    <Border Stroke="Transparent">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="25"/>
-                                        </Border.StrokeShape>
-                                        <Image Grid.RowSpan="2" Aspect="AspectFill" WidthRequest="60" HeightRequest="60" Source="{Binding IconSource}"/>
-                                    </Border>
-                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" Padding="10, 10, 0, 0" Grid.Column="1">
-                                        <Label Text="{Binding Name}" FontAttributes="Bold"/>
-                                        <Label Grid.Row="1" Text="{Binding Symbol}"/>
-                                        <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{Binding IsInPortfolio, StringFormat='Ist hinzugefügt worden: {0}'}" Margin="10" VerticalTextAlignment="Center"/>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
+                <InfoViews:AssetListView x:Name="AssetListView" Grid.Row="1" Margin="5">
+                    <InfoViews:AssetListView.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnElementClickedWindows"/>
+                    </InfoViews:AssetListView.GestureRecognizers>
+                </InfoViews:AssetListView>
             </Grid>
         </VerticalStackLayout>
     </ScrollView>

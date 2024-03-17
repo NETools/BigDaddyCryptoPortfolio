@@ -50,5 +50,19 @@ namespace BigDaddyCryptoPortfolio.Models
 		}
 
 		public event PropertyChangedEventHandler? PropertyChanged;
-	}
+
+        public override bool Equals(object? obj)
+        {
+			if (obj == null)
+				return false;
+
+			return this.GetHashCode().Equals(obj.GetHashCode());
+        }
+
+        public override int GetHashCode()
+        {
+			return HashCode.Combine(Symbol);
+        }
+
+    }
 }

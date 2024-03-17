@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Converters="clr-namespace:BigDaddyCryptoPortfolio.Converters"
+             x:Class="BigDaddyCryptoPortfolio.Ui.InfoViews.AssetListView">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Converters:MultiBooleanConverter x:Key="MultiBooleanConverter" />
+            <Converters:NullConverter x:Key="NullConverter" />
+        </ResourceDictionary>
+
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                  Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentView.Resources>
+
+    <!--<CollectionView x:Name="ListView" SelectionMode="Single" SelectionChanged="ListView_SelectionChanged">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Grid Padding="5,5,5,0">
+                    <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, *">
+                        <Border Grid.ColumnSpan="2" Grid.RowSpan="2" Stroke="Transparent">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="25"/>
+                            </Border.StrokeShape>
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0">
+                                    <GradientStop Color="#202530" Offset="0.0" />
+                                    <GradientStop Color="#111826" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+
+                        <Border Stroke="Transparent">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="25"/>
+                            </Border.StrokeShape>
+                            <Image Grid.RowSpan="2" Aspect="AspectFill" WidthRequest="60" HeightRequest="60" Source="{Binding IconSource}"/>
+                        </Border>
+                        <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="Auto,Auto" Padding="10, 10, 0, 0" Grid.Column="1">
+                            <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                            <Label Grid.Row="1" Text="{Binding Symbol}"/>
+                            <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{Binding IsInPortfolio, StringFormat='Ist hinzugefügt worden: {0}'}" Margin="10" VerticalTextAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>-->
+</ContentView>

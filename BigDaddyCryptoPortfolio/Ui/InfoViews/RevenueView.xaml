@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BigDaddyCryptoPortfolio.Ui.InfoViews.RevenueView">
+
+    <Grid RowDefinitions="*,*,*" Padding="40">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*,*" Padding="5">
+            <Border BackgroundColor="#1f232e" Grid.ColumnSpan="2" Stroke="#1f232e">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+            </Border>
+
+            <Label Text="0" Margin="2.5" Padding="5" FontSize="Title"/>
+            <Label Text="Assets" Margin="2.5" Padding="5" FontSize="Body" Grid.Column="1"/>
+        </Grid>
+
+        <Grid Grid.Row="1" RowDefinitions="Auto,*,*" Padding="5">
+            <Border BackgroundColor="#1f232e" Grid.RowSpan="3" Stroke="#1f232e">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+            </Border>
+
+            <Label Text="Gesamtwert" Margin="2.5" Padding="5"/>
+            <Label Text="0,00 €" Margin="2.5" Padding="5" FontSize="Title" Grid.Row="1"/>
+            <Label Text="0.00%" Margin="2.5" Padding="5" FontSize="Small" Grid.Row="2"/>
+        </Grid>
+
+        <Grid Grid.Row="2" RowDefinitions="*,*" ColumnDefinitions="*,*">
+            <Border BackgroundColor="#1f232e" Grid.ColumnSpan="2" Grid.RowSpan="2" Stroke="#1f232e">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20"/>
+                </Border.StrokeShape>
+            </Border>
+
+            <Label Text="Gesamt Invest" Margin="2.5" Padding="5" FontSize="Small" Grid.Row="0"/>
+            <Label Text="0,00 €" Margin="2.5" Padding="5" FontSize="Small" Grid.Column="1"/>
+
+            <Label Text="Aktueller Profit" Margin="2.5" Padding="5" FontSize="Small" Grid.Row="1"/>
+            <Label Text="0,00 €" Margin="2.5" Padding="5" FontSize="Small" Grid.Row="1" Grid.Column="1"/>
+
+        </Grid>
+    </Grid>
+</ContentView>

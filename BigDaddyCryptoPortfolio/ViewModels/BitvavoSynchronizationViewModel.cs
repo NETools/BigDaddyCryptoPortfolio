@@ -1,4 +1,5 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo;
+using BigDaddyCryptoPortfolio.Contracts.Adapters;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Models;
 using System;
@@ -25,7 +26,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             return _bitvavo.Authenticate();
         }
 
-        public async IAsyncEnumerable<Coin> SynchronizePortfolio(ICoinsViewModel coinsViewModel, IPortfolioViewModel portfolioViewModel)
+        public async IAsyncEnumerable<Coin> SynchronizePortfolio(ICoinDataProvider coinDataProvider, ICoinsViewModel coinsViewModel)
         {
             var balance = await _bitvavo.Balance();
             foreach (var asset in balance)
@@ -34,11 +35,11 @@ namespace BigDaddyCryptoPortfolio.ViewModels
                 if (avaible == 0)
                     continue;
 
-                var coin = coinsViewModel.FindCoin(asset.Symbol);
+                var coin = coinDataProvider.ResolveSymbol(asset.Symbol);
                 if (coin == null)
                     continue;
 
-                coinsViewModel.AddCoin(coin);
+                coinsViewModel.AddCoin(asset.Symbol);
                 yield return coin;
             }
 

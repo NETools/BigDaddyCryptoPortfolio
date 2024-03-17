@@ -9,29 +9,161 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
+using BigDaddyCryptoPortfolio.ViewModels;
+using System.Net.WebSockets;
+using BigDaddyCryptoPortfolio.Converters;
+using Microsoft.Maui.Controls.Shapes;
+using BigDaddyCryptoPortfolio.Ui.InfoViews;
 
 namespace BigDaddyCryptoPortfolio.Views;
 
 public partial class CoinsView : ContentPage
 {
 	private ICoinsViewModel? _coinsViewModel;
-    private TappingCountDetection<CollectionView> _buttonTapDetection;
+    private TappingCountDetection<AssetListView> _buttonTapDetection;
 
     private View[] _miniSelectedCoinViews = [new SelectedCoinInfoView(), new SelectedCoinCourseView()];
 
     private int _selectedMiniCoinViewIndex = 0;
 
-	public CoinsView(ICoinsViewModel coinsViewModel)
+    private IServiceProvider _serviceProvider;
+
+    public CoinsView(ICoinsViewModel coinsViewModel, IServiceProvider serviceProvider)
 	{
 		InitializeComponent();
 
+        _serviceProvider = serviceProvider;
 		_coinsViewModel = coinsViewModel;
 		BindingContext = _coinsViewModel;
 
+        AssetsView.SwipeViewGenerator = () =>
+        {
+            var swipeView = new SwipeView();
+
+            var deleteSwipeItem = new SwipeItemView();
+            deleteSwipeItem.Invoked += DeleteInvoked;
+
+            var deleteSwipeItemGrid = new Grid()
+            {
+                WidthRequest = 100
+            };
+            var deleteSwipeItemGridBorder = new Border()
+            {
+                BackgroundColor = Color.FromArgb("#2a2f3a"),
+                Stroke = Color.Parse("Transparent"),
+                StrokeShape = new RoundRectangle()
+                {
+                    CornerRadius = 25
+                }
+            };
+
+            var deleteLabel = new Label()
+            {
+                BackgroundColor = Color.Parse("Transparent"),
+                Text = "Entfernen",
+                VerticalOptions = LayoutOptions.Center,
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 15,
+                HorizontalOptions = LayoutOptions.Center
+            };
+
+            deleteSwipeItemGrid.Add(deleteSwipeItemGridBorder);
+            deleteSwipeItemGrid.Add(deleteLabel);
+
+            deleteSwipeItem.Content = deleteSwipeItemGrid;
+
+            swipeView.Triggers.Add(new DataTrigger(typeof(SwipeView))
+            {
+                Binding = new MultiBinding()
+                {
+                    Converter = new MultiBooleanConverter(),
+                    Bindings =
+                    {
+                        new Binding("IsInPortfolio"),
+                        new Binding("IsSelected")
+                    }
+                },
+                Value = true,
+                Setters =
+                {
+                    new Setter()
+                    {
+                        Property = SwipeView.LeftItemsProperty,
+                        Value = new SwipeItems
+                        {
+                            deleteSwipeItem
+                        }
+                    }
+                }
+            });
+
+            var addSwipeItem = new SwipeItemView();
+            addSwipeItem.Invoked += AddInvoked;
+
+            var addSwipeItemGrid = new Grid()
+            {
+                WidthRequest = 100
+            };
+            var addSwipeItemGridBorder = new Border()
+            {
+                BackgroundColor = Color.FromArgb("#2a2f3a"),
+                Stroke = Color.Parse("Transparent"),
+                StrokeShape = new RoundRectangle()
+                {
+                    CornerRadius = 25
+                }
+            };
+
+            var addLabel = new Label()
+            {
+                BackgroundColor = Color.Parse("Transparent"),
+                Text = "Hinzufügen",
+                VerticalOptions = LayoutOptions.Center,
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 15,
+                HorizontalOptions = LayoutOptions.Center
+            };
+
+            addSwipeItemGrid.Add(addSwipeItemGridBorder);
+            addSwipeItemGrid.Add(addLabel);
+
+            addSwipeItem.Content = addSwipeItemGrid;
+
+            swipeView.Triggers.Add(new DataTrigger(typeof(SwipeView))
+            {
+                Binding = new MultiBinding()
+                {
+                    Converter = new MultiBooleanConverter(),
+                    Bindings =
+                    {
+                        new Binding("IsNotInPortfolio"),
+                        new Binding("IsSelected")
+                    }
+                },
+                Value = true,
+                Setters =
+                {
+                    new Setter()
+                    {
+                        Property = SwipeView.RightItemsProperty,
+                        Value = new SwipeItems
+                        {
+                            addSwipeItem
+                        }
+                    }
+                }
+            });
+
+            return swipeView;
+        };
+        AssetsView.CoinSelected += (coin) => _coinsViewModel.SelectCoin(coin);
+        AssetsView.InitView();
+        AssetsView.SetCoinSource("SelectedCategoryCoins", _coinsViewModel);
+
         _coinsViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
-        _buttonTapDetection = new TappingCountDetection<CollectionView>();
-        _buttonTapDetection.Register(ListView, 2, 100);
+        _buttonTapDetection = new TappingCountDetection<AssetListView>();
+        _buttonTapDetection.Register(AssetsView, 2, 100);
 
         InfoContainer.Content = _miniSelectedCoinViews[_selectedMiniCoinViewIndex];
 	}
@@ -59,35 +191,14 @@ public partial class CoinsView : ContentPage
         }
     }
 
-    private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-		if (e.CurrentSelection.Count == 0)
-			return;
 
-		_coinsViewModel?.SelectCoin((Coin)e.CurrentSelection[0]);
-		ListView.ScrollTo(e.CurrentSelection[0], null, ScrollToPosition.MakeVisible, true);
-		CloseSwipeItems();
-    }
-
-    private void CloseSwipeItems()
-	{
-        var field = ListView.GetVisualTreeDescendants();
-        foreach (IVisualTreeElement element in field)
-        {
-            if (element is SwipeView swipeView)
-            {
-                swipeView.Close(true);
-            }
-        }
-    }
-
-	private void DeleteInvoked(object sender, EventArgs e)
+	private void DeleteInvoked(object? sender, EventArgs e)
 	{
 		var deletedCoin = (Coin)((SwipeItemView)sender).BindingContext;
 		RemoveCoin(deletedCoin);
 	}
 
-	private void AddInvoked(object sender, EventArgs e)
+	private void AddInvoked(object? sender, EventArgs e)
 	{
         var addedCoin = (Coin)((SwipeItemView)sender).BindingContext;
 		AddCoin(addedCoin);
@@ -95,16 +206,16 @@ public partial class CoinsView : ContentPage
 
 	private void AddCoin(Coin coin)
 	{
-        _coinsViewModel?.AddCoin(coin);
+        _coinsViewModel?.AddCoin(coin.Symbol);
         HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
-        ListView.SelectedItem = null;
+        AssetsView.Unselect();
     }
 
 	private void RemoveCoin(Coin coin)
 	{
-        _coinsViewModel?.DeleteCoin(coin);
+        _coinsViewModel?.DeleteCoin(coin.Symbol);
         HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
-        ListView.SelectedItem = null;
+        AssetsView.Unselect();
     }
 
 
@@ -115,7 +226,16 @@ public partial class CoinsView : ContentPage
 
         int index = (++_selectedMiniCoinViewIndex) % 2;
         InfoContainer.Content = _miniSelectedCoinViews[index];
-        
+
+        //var websocket = new ClientWebSocket();
+        //await websocket.ConnectAsync(new Uri("ws://178.25.225.236:8000/"), CancellationToken.None);
+
+        //var codeLoader = new RemoteCodeLoader.RemoteCodeLoader(websocket);
+        //codeLoader.AddLocalAssembly(typeof(ICoinsViewModel));
+        //codeLoader.AddLocalAssembly(typeof(CoinsViewModel));
+
+        //var view = await codeLoader.CreateXamlElement<ContentView>("rcns://remote/./views/contentviews/courseview.xaml", _serviceProvider);
+        //InfoContainer.Content = view;
 
     }
 
@@ -125,9 +245,9 @@ public partial class CoinsView : ContentPage
         {
             return;
         }
-        var selectedCoin = ListView.SelectedItem as Coin;
+        var selectedCoin = AssetsView.SelectedCoin;
 
-        _buttonTapDetection.HandleTapping(ListView, ListView.SelectedItem, () =>
+        _buttonTapDetection.HandleTapping(AssetsView, AssetsView.SelectedCoin, () =>
         {
             if (selectedCoin == null)
                 return;

@@ -20,4 +20,12 @@ namespace BigDaddyCryptoPortfolio.Models
 		Tokenization = 1 << 8,
 		NoHype = 1 << 9,
 	}
+
+	public enum CredentialType
+	{
+		Md5,
+		Sha256,
+		Sha512,
+		NoHash
+	}
 }

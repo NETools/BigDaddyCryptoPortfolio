@@ -1,4 +1,5 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.Maths;
+using BigDaddyCryptoPortfolio.Contracts.Adapters;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Shared;
@@ -18,6 +19,8 @@ namespace BigDaddyCryptoPortfolio.ViewModels
     {
         private bool _isDirty = true;
         private double _lastScore;
+
+        private ICoinDataProvider _coinDataProvider;
 
         private Dictionary<CoinCategory, int> _categoryIndex = new Dictionary<CoinCategory, int>()
         {
@@ -89,8 +92,9 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
-        public PortfolioViewModel()
+        public PortfolioViewModel(ICoinDataProvider coinDataProvider)
         {
+            _coinDataProvider = coinDataProvider;
             _scoreCalculation = new ScoreCalculationAdapter(this);
 
             for (int i = 0; i < AllocationFullfillmentsIndicator.Length; i++)
@@ -99,76 +103,65 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             }
 
             CategoryIndicators = new List<CategoryIndicator>();
+
+            string[] categories = ["AI",
+            "Web3",
+            "Defi",
+            "Grüne Coins",
+            "Gaming/Metaverse",
+            "BTC-Zusammenhang",
+            "CBDC-Netzwerk",
+            "eCommerce",
+            "Tokenization",
+            "Kein Hype"];
+
+            Color[] colors = [Color.FromArgb("#ffd700"), Color.FromArgb("#dc143c"), Color.FromArgb("#15b"), Color.FromArgb("#0a6"), Color.FromArgb("#00bfff"), Color.FromArgb("#e61"), Color.FromArgb("#678"), Color.FromArgb("#72a"), Color.FromArgb("#ff5aac"), Color.FromArgb("#000000")];
+
             for (int i = 0; i < 9; i++)
             {
                 CategoryIndicators.Add(new CategoryIndicator()
                 {
+                    CategoryName = categories[i],
+                    CategoryColor = colors[i],
                     StartColor = Color.FromArgb("#1f232e"),
                     EndColor = Color.FromArgb("#1f232e"),
                     Percentage = 0.0
                 });
             }
+
+
         }
 
-        public void AddCoin(Coin coin)
+        public bool AddCoin(string symbol)
         {
-            var categories = EnumToolKit.GetCoinCategories(coin.Category);
-            foreach (var category in categories)
-            {
-                if (!Assets.ContainsKey(category))
-                    Assets.Add(category, new List<Coin>());
+            var coin = _coinDataProvider.ResolveSymbol(symbol);
 
-                Assets[category].Add(coin);
+            if (Coins.Any(p => p.Symbol == coin.Symbol))
+                return false;
 
-                PortfolioEntryCount++;
-            }
-
-            Coins.Add(coin);
-
-            TotalCointCount++;
-
+            AddToAssets(coin);
             UpdateIndicators();
             _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
 
-            _isDirty = true;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Assets)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Score)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CategoryIndicators)));
+            StateHasChanged();
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Coins)));
-            //CollectionChanged?.Invoke(coin, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+            return true;
         }
 
-        public void RemoveCoin(Coin coin)
+        public bool RemoveCoin(string symbol)
         {
-            var categories = EnumToolKit.GetCoinCategories(coin.Category);
-            foreach (var category in categories)
-            {
-                Assets[category].Remove(coin);
-                if (Assets[category].Count == 0)
-                    Assets.Remove(category);
-                
-                PortfolioEntryCount--;
-            }
+            var coin = _coinDataProvider.ResolveSymbol(symbol);
 
-            Coins.Remove(coin);
+            if (!Coins.Any(p => p.Symbol == coin.Symbol))
+                return false;
 
-            TotalCointCount--;
-
+            RemoveFromAsset(coin);
             UpdateIndicators();
             _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
+            
+            StateHasChanged();
 
-            _isDirty = true;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Assets)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Score)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CategoryIndicators)));
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Coins)));
-            //CollectionChanged?.Invoke(coin, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove));
+            return true;
         }
         public void UnselectAll()
         {
@@ -200,17 +193,11 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
         private void UpdateIndicators()
         {
-
-            if (Assets.Count == 0)
+            foreach (var indicator in CategoryIndicators)
             {
-                foreach (var indicator in CategoryIndicators)
-                {
-                    indicator.StartColor = Color.FromArgb("#1f232e");
-                    indicator.EndColor = Color.FromArgb("#1f232e");
-                    indicator.Percentage = 0;
-                }
-
-                return;
+                indicator.StartColor = Color.FromArgb("#1f232e");
+                indicator.EndColor = Color.FromArgb("#1f232e");
+                indicator.Percentage = 0;
             }
 
             foreach (var asset in Assets)
@@ -234,6 +221,53 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
 
             }
+        }
+
+        private void StateHasChanged()
+        {
+            _isDirty = true;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Assets)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Score)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluationText)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AllocationFullfillmentsIndicator)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CategoryIndicators)));
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Coins)));
+        }
+
+        private void AddToAssets(Coin coin)
+        {
+            var categories = EnumToolKit.GetCoinCategories(coin.Category);
+            foreach (var category in categories)
+            {
+                if (!Assets.ContainsKey(category))
+                    Assets.Add(category, new List<Coin>());
+
+                Assets[category].Add(coin);
+
+                PortfolioEntryCount++;
+            }
+
+            Coins.Add(coin);
+
+            TotalCointCount++;
+        }
+
+        private void RemoveFromAsset(Coin coin)
+        {
+            var categories = EnumToolKit.GetCoinCategories(coin.Category);
+            foreach (var category in categories)
+            {
+                Assets[category].Remove(coin);
+                if (Assets[category].Count == 0)
+                    Assets.Remove(category);
+
+                PortfolioEntryCount--;
+            }
+
+            Coins.Remove(coin);
+
+            TotalCointCount--;
         }
     }
 }
