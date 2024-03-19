@@ -2,6 +2,7 @@ using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Converters;
 using BigDaddyCryptoPortfolio.Gestures;
 using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Ui;
 using BigDaddyCryptoPortfolio.Ui.Graphics.Charts;
 using BigDaddyCryptoPortfolio.Ui.InfoViews;
 using Microsoft.Maui.Controls.Shapes;

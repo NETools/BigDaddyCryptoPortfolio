@@ -1,5 +1,6 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.Maths;
 using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Ui;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

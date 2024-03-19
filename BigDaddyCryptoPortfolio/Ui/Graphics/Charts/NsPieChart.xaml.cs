@@ -1,4 +1,4 @@
-using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Ui;
 using Microsoft.Maui.Layouts;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;

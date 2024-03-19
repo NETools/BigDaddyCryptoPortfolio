@@ -2,7 +2,6 @@ using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Gestures;
 using BigDaddyCryptoPortfolio.Ui.MiniViews;
-using BigDaddyCryptoPortfolio.Models;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Internals;
 using System.Collections.ObjectModel;
@@ -14,6 +13,7 @@ using System.Net.WebSockets;
 using BigDaddyCryptoPortfolio.Converters;
 using Microsoft.Maui.Controls.Shapes;
 using BigDaddyCryptoPortfolio.Ui.InfoViews;
+using BigDaddyCryptoPortfolio.Models.Ui;
 
 namespace BigDaddyCryptoPortfolio.Views;
 

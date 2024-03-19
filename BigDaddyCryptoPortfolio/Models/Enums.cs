@@ -28,4 +28,17 @@ namespace BigDaddyCryptoPortfolio.Models
 		Sha512,
 		NoHash
 	}
+
+	public enum TransactionType
+	{
+		Add,
+		Remove
+	}
+
+	public enum Subscription
+	{
+		Essential,
+		Plus,
+		Premium
+	}
 }

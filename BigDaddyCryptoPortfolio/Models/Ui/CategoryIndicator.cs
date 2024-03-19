@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BigDaddyCryptoPortfolio.Models
+namespace BigDaddyCryptoPortfolio.Models.Ui
 {
     public class CategoryIndicator : INotifyPropertyChanged
     {

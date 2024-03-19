@@ -1,5 +1,5 @@
 using BigDaddyCryptoPortfolio.Converters;
-using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Ui;
 using Microsoft.Maui.Controls.Shapes;
 using System.Collections.ObjectModel;
 

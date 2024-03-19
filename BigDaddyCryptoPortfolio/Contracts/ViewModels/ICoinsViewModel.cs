@@ -1,4 +1,4 @@
-﻿using BigDaddyCryptoPortfolio.Models;
+﻿using BigDaddyCryptoPortfolio.Models.Ui;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 {
-	public interface ICoinsViewModel : INotifyPropertyChanged
+    public interface ICoinsViewModel : INotifyPropertyChanged
 	{
         public List<string> Categories { get; }
 		public List<Color> CategoryColor { get; }

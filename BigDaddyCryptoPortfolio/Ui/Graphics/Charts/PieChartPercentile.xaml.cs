@@ -1,5 +1,5 @@
 using BigDaddyCryptoPortfolio.Adapters.Drawables;
-using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Ui;
 using System.Diagnostics;
 
 namespace BigDaddyCryptoPortfolio.Ui.Graphics.Charts;

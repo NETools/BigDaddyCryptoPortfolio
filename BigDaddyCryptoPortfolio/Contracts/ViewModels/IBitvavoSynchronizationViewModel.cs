@@ -1,5 +1,5 @@
 ﻿using BigDaddyCryptoPortfolio.Contracts.Adapters;
-using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Ui;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

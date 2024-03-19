@@ -2,6 +2,7 @@
 using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Ui;
 using BigDaddyCryptoPortfolio.ViewModels.Commands.CoinsView;
 using CommunityToolkit.Maui.Core.Extensions;
 using System;
@@ -17,7 +18,7 @@ using System.Windows.Input;
 
 namespace BigDaddyCryptoPortfolio.ViewModels
 {
-	internal class CoinsViewModel : ICoinsViewModel
+    internal class CoinsViewModel : ICoinsViewModel
 	{
 		private Coin? _selectedCoin;
 	

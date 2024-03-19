@@ -12,7 +12,6 @@ namespace BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement
     {
         public ApiResult<User> Login(Dictionary<string, Credential> credentials);
         public ApiResult<User> Logout(User user);
-        public ApiResult<string> Register(Dictionary<string, Credential> credentials);
-
+        public ApiResult<User> Register(Dictionary<string, Credential> credentials);
     }
 }

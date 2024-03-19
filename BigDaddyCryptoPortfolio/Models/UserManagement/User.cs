@@ -8,5 +8,7 @@ namespace BigDaddyCryptoPortfolio.Models.UserManagement
 {
     public class User
     {
+        public Guid UserId { get; set; }
+        public Guid SessionId { get; set; }
     }
 }
