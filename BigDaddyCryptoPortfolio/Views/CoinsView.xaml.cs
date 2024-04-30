@@ -22,8 +22,8 @@ public partial class CoinsView : ContentPage
 	private ICoinsViewModel? _coinsViewModel;
     private TappingCountDetection<AssetListView> _buttonTapDetection;
 
-    private View[] _miniSelectedCoinViews = [new SelectedCoinInfoView(), new SelectedCoinCourseView()];
-
+    private View[] _miniSelectedCoinViews;
+    private string[] _miniSelectedButtonText = ["Zeige Kursdaten", "Zeige Beschreibung"];
     private int _selectedMiniCoinViewIndex = 0;
 
     private IServiceProvider _serviceProvider;
@@ -165,6 +165,8 @@ public partial class CoinsView : ContentPage
         _buttonTapDetection = new TappingCountDetection<AssetListView>();
         _buttonTapDetection.Register(AssetsView, 2, 100);
 
+        _miniSelectedCoinViews = [new SelectedCoinInfoView(), new SelectedCoinCourseView(coinsViewModel)];
+
         InfoContainer.Content = _miniSelectedCoinViews[_selectedMiniCoinViewIndex];
 	}
 
@@ -226,21 +228,23 @@ public partial class CoinsView : ContentPage
 
         int index = (++_selectedMiniCoinViewIndex) % 2;
         InfoContainer.Content = _miniSelectedCoinViews[index];
+        CourseDataButton.Text = _miniSelectedButtonText[index];
 
-        //var websocket = new ClientWebSocket();
-        //await websocket.ConnectAsync(new Uri("ws://178.25.225.236:8000/"), CancellationToken.None);
+		//var websocket = new ClientWebSocket();
+		//await websocket.ConnectAsync(new Uri("ws://178.25.225.236:8000/"), CancellationToken.None);
 
-        //var codeLoader = new RemoteCodeLoader.RemoteCodeLoader(websocket);
-        //codeLoader.AddLocalAssembly(typeof(ICoinsViewModel));
-        //codeLoader.AddLocalAssembly(typeof(CoinsViewModel));
+		//var codeLoader = new RemoteCodeLoader.RemoteCodeLoader(websocket);
+		//codeLoader.AddLocalAssembly(typeof(ICoinsViewModel));
+		//codeLoader.AddLocalAssembly(typeof(CoinsViewModel));
 
-        //var view = await codeLoader.CreateXamlElement<ContentView>("rcns://remote/./views/contentviews/courseview.xaml", _serviceProvider);
-        //InfoContainer.Content = view;
+		//var view = await codeLoader.CreateXamlElement<ContentView>("rcns://remote/./views/contentviews/courseview.xaml", _serviceProvider);
+		//InfoContainer.Content = view;
 
-    }
+	}
 
     private void OnElementClickedWindows(object sender, TappedEventArgs e)
     {
+        AssetsView.MaximumHeightRequest = 400;
         if (DeviceInfo.Current.Platform != DevicePlatform.WinUI)
         {
             return;
@@ -264,8 +268,8 @@ public partial class CoinsView : ContentPage
         if (_coinsViewModel == null)
             return;
 
-
-        await CoinListContainer.FadeTo(0);
+		AssetsView.MaximumHeightRequest = double.PositiveInfinity;
+		await CoinListContainer.FadeTo(0);
 
         var index = _coinsViewModel.Categories.IndexOf((string)e.CurrentSelection[0]);
         _coinsViewModel?.SelectCategory(index);

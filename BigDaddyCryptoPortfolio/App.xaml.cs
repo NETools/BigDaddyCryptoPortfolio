@@ -1,13 +1,15 @@
-﻿using BigDaddyCryptoPortfolio.Contracts.Adapters;
+﻿using BigDaddyCryptoPortfolio.Adapters.API.Gecko;
+using BigDaddyCryptoPortfolio.Contracts.Adapters;
 using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
+using BigDaddyCryptoPortfolio.Contracts.ViewModels.Auth;
 using BigDaddyCryptoPortfolio.Views;
 using System.Collections.Specialized;
 
 namespace BigDaddyCryptoPortfolio
 {
 
-    class Test : RouteFactory
+    class Settings : RouteFactory
     {
         public override Element GetOrCreate()
         {
@@ -28,41 +30,32 @@ namespace BigDaddyCryptoPortfolio
 
     public partial class App : Application
 	{
-		public App(ICoinsViewModel coinsViewModel, IAppUiControl context, IPortfolioViewModel portfolioViewModel, IBitvavoSynchronizationViewModel settingsViewModel, IServiceProvider serviceProvider, ICoinDataProvider coinDataProvider)
+		public App(IAppUiControl context, IRegisterViewModel registerViewModel, ILoginViewModel loginViewModel, IConfirmViewModel confirmViewModel, ICoinDataProvider coinDataProvider)
 		{
-			InitializeComponent();
+            InitializeComponent();
             coinDataProvider.LoadCoins();
 
             context.AddTabRequested += OnAddTabRequested;
+			context.RemoveTabRequested += OnRemoveTabRequested;
 
-            Routing.RegisterRoute("views/coins/settings", new Test());
-
-
-			Tabs.Items.Add(new ShellContent()
-			{
-				Title = "Coins",
-				Route = "CoinsView",
-				ContentTemplate = new DataTemplate(() => new CoinsView(coinsViewModel, serviceProvider)),
-			});
+            Routing.RegisterRoute("views/coins/settings", new Settings());
 
             Tabs.Items.Add(new ShellContent()
             {
-                Title = "Asset Manager",
-                Route = "AssetManagerView",
-                ContentTemplate = new DataTemplate(() => new AssetManagerView())
+                Title = "Authentication",
+                Route = "AuthenticationView",
+                ContentTemplate = new DataTemplate(() => new AuthenticationView(registerViewModel, loginViewModel, confirmViewModel))
             });
-
-            Tabs.Items.Add(new ShellContent()
-			{
-				Title = "Portfolio",
-				Route = "PortfolioView",
-				ContentTemplate = new DataTemplate(() => new PortfolioView(coinsViewModel, portfolioViewModel))
-			});
 		}
 
-        private void OnAddTabRequested(string tabName)
-        {
+		private void OnRemoveTabRequested(string title)
+		{
+            Tabs.Items.Remove(Tabs.Items.First(p => p.Title == title));
+		}
 
+		private void OnAddTabRequested(ShellContent content)
+        {
+            Tabs.Items.Add(content);
         }
 	}
 }

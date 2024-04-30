@@ -70,7 +70,7 @@ public partial class AssetListView : ContentView
                         {
                             new GradientStop(Color.FromArgb("#202530"), 0.0f),
                             new GradientStop(Color.FromArgb("#111826"), 1.0f)
-                        }
+                        }   
                     }
                 };
 

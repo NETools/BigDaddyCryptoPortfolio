@@ -71,6 +71,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 		}
 
         public event PropertyChangedEventHandler? PropertyChanged;
+		public event Action SelectedCoinChanged;
 
 		public CoinsViewModel(IPortfolioViewModel portfolioViewModel, ICoinDataProvider coinDataProvider)
 		{
@@ -144,6 +145,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
             SelectedCoin = coin;
             SelectedCoin.IsSelected = true;
+			SelectedCoinChanged?.Invoke();
 
         }
 

@@ -8,9 +8,10 @@ namespace BigDaddyCryptoPortfolio.Contracts.AppControls
 {
 	public interface IAppUiControl
 	{
-		public event Action<string> AddTabRequested;
+		public event Action<ShellContent> AddTabRequested;
 		public event Action<string> RemoveTabRequested;
 
-		public void AddTab(string tabName);
+		public void AddTab(ShellContent content);
+		public void RemoveTab(string title);
 	}
 }

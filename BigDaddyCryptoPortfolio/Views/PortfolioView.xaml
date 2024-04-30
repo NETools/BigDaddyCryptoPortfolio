@@ -21,10 +21,7 @@
         <VerticalStackLayout>
 
             <Grid RowDefinitions="Auto,*" Padding="10">
-                <Border BackgroundColor="#202530" Grid.RowSpan="2">
-                    <Border.Shadow>
-                        <Shadow Brush="White"/>
-                    </Border.Shadow>
+                <Border BackgroundColor="#202530" Grid.RowSpan="2" Stroke="Transparent">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>
@@ -77,10 +74,7 @@
             </Grid>
 
             <Grid RowDefinitions="Auto,400,*" Padding="10">
-                <Border BackgroundColor="#202530" Grid.ColumnSpan="2" Grid.RowSpan="3">
-                    <Border.Shadow>
-                        <Shadow Brush="White"/>
-                    </Border.Shadow>
+                <Border BackgroundColor="#202530" Grid.ColumnSpan="2" Grid.RowSpan="3" Stroke="Transparent">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>
@@ -162,10 +156,7 @@
             </Grid>
 
             <Grid RowDefinitions="Auto,*" Padding="10">
-                <Border BackgroundColor="#202530" Grid.RowSpan="2">
-                    <Border.Shadow>
-                        <Shadow Brush="White"/>
-                    </Border.Shadow>
+                <Border BackgroundColor="#202530" Grid.RowSpan="2" Stroke="Transparent">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>
@@ -229,10 +220,7 @@
             </Grid>
 
             <Grid RowDefinitions="Auto,500" Padding="10">
-                <Border BackgroundColor="#202530" Grid.RowSpan="2">
-                    <Border.Shadow>
-                        <Shadow Brush="White"/>
-                    </Border.Shadow>
+                <Border BackgroundColor="#202530" Grid.RowSpan="2" Stroke="Transparent">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>

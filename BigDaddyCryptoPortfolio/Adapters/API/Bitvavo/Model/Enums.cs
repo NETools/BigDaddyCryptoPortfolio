@@ -25,4 +25,10 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model
         Ticker = 110,
         Balance = 120,
     }
+
+    public enum TransactionSide
+    {
+        Sell,
+        Buy
+    }
 }

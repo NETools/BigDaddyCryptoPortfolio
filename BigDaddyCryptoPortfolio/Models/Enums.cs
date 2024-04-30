@@ -41,4 +41,11 @@ namespace BigDaddyCryptoPortfolio.Models
 		Plus,
 		Premium
 	}
+
+	public enum AuthViews
+	{
+		Login,
+		Register,
+		Confirmation
+	}
 }

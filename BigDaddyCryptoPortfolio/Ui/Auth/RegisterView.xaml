@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BigDaddyCryptoPortfolio.Ui.Auth.RegisterView">
+
+    <VerticalStackLayout>
+        <Grid VerticalOptions="Center" Margin="100">
+            <Border Stroke="Transparent" Grid.Row="0" BackgroundColor="#202530" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="350">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout>
+                    <Label Text="Login" HorizontalOptions="Center" FontSize="18.72" Margin="0,50,0,0"/>
+
+                    <Border Margin="10" Stroke="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5"/>
+                        </Border.StrokeShape>
+                        <Entry Placeholder ="E-Mail" Text="{Binding Email}" HeightRequest="50"/>
+                    </Border>
+
+                    <Border Margin="10, 0, 10, 10" Stroke="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5"/>
+                        </Border.StrokeShape>
+                        <Entry Placeholder ="Passwort" IsPassword="True" Text="{Binding Password}" HeightRequest="50"/>
+                    </Border>
+
+                    <Border Margin="10, 0, 10, 10" Stroke="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5"/>
+                        </Border.StrokeShape>
+                        <Button Text="Registrieren" BackgroundColor="#14171f" Clicked="Button_Clicked" x:Name="RegisterButton"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="Auto, Auto" HorizontalOptions="Center">
+                        <Label Text="Schon ein Account?" Margin="10" />
+                        <Label Grid.Column="1" Text="Einloggen" Margin="-5, 10, 10, 10" TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+
+                </VerticalStackLayout>
+            </Border>
+            <Border WidthRequest="100" HeightRequest="100" Margin="0,-50,0,0" VerticalOptions="Start" BackgroundColor="White" >
+                <Border.StrokeShape>
+                    <Ellipse WidthRequest="100" HeightRequest="100"/>
+                </Border.StrokeShape>
+                <Image Source="bdc.png" WidthRequest="100" HeightRequest="100" Aspect="AspectFit" />
+            </Border>
+
+        </Grid>
+
+
+        <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0" BackgroundColor="#202530">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="25"/>
+            </Border.StrokeShape>
+
+            <Label Text="{Binding Message}" Padding="10" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Border>
+    </VerticalStackLayout>
+
+</ContentView>

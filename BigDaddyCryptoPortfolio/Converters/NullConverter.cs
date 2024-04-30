@@ -11,12 +11,34 @@ namespace BigDaddyCryptoPortfolio.Converters
 	{
 		public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
 		{
-			if (value == null)
-				return false;
-			else if (value is bool boolean)
-				return boolean;
+			if (parameter is not string param)
+			{
+				throw new InvalidDataException();
+			}
 
-			throw new NotImplementedException();
+			var parameters = param.Split(';');
+			var finalValue = value + "";
+			if (parameters.Length > 1)
+			{
+				var concat = parameters[1];
+				var start = concat.IndexOf("|");
+				var substring = "";
+				if (start == 0)
+				{
+					substring = concat.Substring(1, concat.Length - 1);
+					finalValue += substring;
+				}
+				else
+				{
+					substring = concat.Substring(0, start);
+					finalValue = finalValue.Insert(0, substring);
+				}
+			}
+
+			if (value == null)
+				return parameters[0];
+			else
+				return finalValue;
 		}
 
 		public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

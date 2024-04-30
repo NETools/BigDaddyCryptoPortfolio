@@ -1,6 +1,5 @@
 ﻿using BigDaddyCryptoPortfolio.Models.Api;
 using BigDaddyCryptoPortfolio.Models.Dtos;
-using BigDaddyCryptoPortfolio.Models.UserManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement
 {
     public interface ISynchronizationManagement
     {
-        public ApiResult<SynchronizationResponse> BeginCommit(User user);
+        public ApiResult<SynchronizationResponse> BeginCommit(string user);
         public void Push<T>(SynchronizationTask<T> action);
         public ApiResult<SynchronizationResponse> EndCommit();
     }

@@ -20,6 +20,8 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 		public Coin? SelectedCoin { get; }
 		public string UiInfoMessage { get; }
 
+		public event Action SelectedCoinChanged;
+
         public void SelectCategory(int index);
 		public void SelectCoin(Coin coin);
 

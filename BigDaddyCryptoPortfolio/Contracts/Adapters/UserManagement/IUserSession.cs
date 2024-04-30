@@ -1,5 +1,5 @@
-﻿using BigDaddyCryptoPortfolio.Models;
-using BigDaddyCryptoPortfolio.Models.UserManagement;
+﻿using Amazon.CognitoIdentityProvider.Model;
+using BigDaddyCryptoPortfolio.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +10,8 @@ namespace BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement
 {
     public interface IUserSession
     {
-        public void StartSession(User user);
-        public User CurrentUser();
-        public Subscription CurrentUsersSubscription();
-        public string ResolveUsername();
-        public Response Get<Request, Response>(string resource, Request request);
+        public string Username { get; }
+        public void StartSession(string username, List<AttributeType> attributes);
+        public AttributeType GetAttribute(string key);
     }
 }

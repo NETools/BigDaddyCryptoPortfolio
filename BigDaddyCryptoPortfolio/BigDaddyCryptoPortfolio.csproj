@@ -57,20 +57,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Remove="Resources\Images\coin-stack.png" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="Resources\Fonts\alata-regular.ttf" />
 	  <None Remove="Resources\Fonts\UniSansHeavy.otf" />
 	  <None Remove="Resources\Fonts\UniSansHeavyItalic.otf" />
 	  <None Remove="Resources\Fonts\UniSansThin.otf" />
 	  <None Remove="Resources\Fonts\UniSansThinItalic.otf" />
+	  <None Remove="Resources\Images\coin_stack.png" />
 	  <None Remove="Resources\Raw\CoinList.json" />
+	  <None Remove="Resources\Raw\CoinList2.json" />
 	  <None Remove="Resources\Raw\Lang\Ger.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="3.7.303.4" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.9.2" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
@@ -81,6 +80,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Ui\Auth\ConfirmView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Ui\Auth\LoginView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Ui\Auth\RegisterView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Ui\InfoViews\AssetListView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -103,6 +111,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\AssetManagerView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\AuthenticationView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\CoinsView.xaml">
@@ -133,13 +144,18 @@
 
 	<ItemGroup>
 	  <Folder Include="Ui\Popups\" />
-	  <Folder Include="UserExperience\" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Reference Include="RemoteCodeLoader">
 	    <HintPath>..\..\RemoteCodeLoader\RemoteCodeLoader\obj\Debug\net8.0-windows10.0.19041.0\RemoteCodeLoader.dll</HintPath>
 	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Update="Resources\Images\coin_stack.png">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </MauiImage>
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadGenericExceptionInfoBarBigDaddyCryptoPortfolioHideInfoBar="True" /></VisualStudio></ProjectExtensions>

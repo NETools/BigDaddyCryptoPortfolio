@@ -7,7 +7,6 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <Converters:MultiBooleanConverter x:Key="MultiBooleanConverter" />
-            <Converters:NullConverter x:Key="NullConverter" />
         </ResourceDictionary>
 
         <Style TargetType="Grid">

@@ -9,6 +9,7 @@ namespace BigDaddyCryptoPortfolio.Models.Ui
 {
     public class Coin : INotifyPropertyChanged
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Symbol { get; set; }
         public double Price { get; set; }
@@ -61,7 +62,7 @@ namespace BigDaddyCryptoPortfolio.Models.Ui
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Symbol);
+            return HashCode.Combine(Id);
         }
 
     }

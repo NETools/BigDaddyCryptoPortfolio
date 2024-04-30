@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BigDaddyCryptoPortfolio.Ui.Auth.ConfirmView">
+
+    <VerticalStackLayout>
+        <Grid VerticalOptions="Center" Margin="200">
+            <Border Stroke="Transparent" Grid.Row="0" BackgroundColor="#202530" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="350">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="25"/>
+                </Border.StrokeShape>
+                <VerticalStackLayout>
+                    <Label Text="Bestätigen Sie die Registrierung" HorizontalOptions="Center" FontSize="18.72" Margin="0,50,0,0"/>
+
+                    <Border Margin="10" Stroke="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5"/>
+                        </Border.StrokeShape>
+                        <Entry x:Name="EmailEntry" Placeholder ="Email" Text="{Binding Email}"/>
+                    </Border>
+
+                    <Border Margin="10, 0, 10, 10" Stroke="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5"/>
+                        </Border.StrokeShape>
+                        <Entry x:Name="CodeEntry" Placeholder ="Bestätitungscode" Text="{Binding ConfirmationCode}"/>
+                    </Border>
+
+                    <Border Margin="10, 0, 10, 10" Stroke="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="5"/>
+                        </Border.StrokeShape>
+                        <Button x:Name="ConfirmButton" Text="Bestätigen" BackgroundColor="#14171f" Clicked="OnButtonClicked"/>
+                    </Border>
+
+                    <Grid ColumnDefinitions="Auto, Auto" HorizontalOptions="Center">
+                        <Label Text="Code abgelaufen?" Margin="10" />
+                        <Label Grid.Column="1" Text="Nochmals senden!" Margin="-5, 10, 10, 10" TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSendCodeAgainTapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="Auto, Auto" HorizontalOptions="Center">
+                        <Label Grid.Column="1" Text="Zurück" Margin="-5, 10, 10, 10" TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnGoBackTapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+            <Border WidthRequest="100" HeightRequest="100" Margin="0,-50,0,0" VerticalOptions="Start" BackgroundColor="White" >
+                <Border.StrokeShape>
+                    <Ellipse WidthRequest="100" HeightRequest="100"/>
+                </Border.StrokeShape>
+                <Image Source="bdc.png" WidthRequest="100" HeightRequest="100" Aspect="AspectFit" />
+            </Border>
+
+        </Grid>
+
+        <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0" BackgroundColor="#202530" Margin="-50">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="25"/>
+            </Border.StrokeShape>
+
+            <Label Text="{Binding Message}" Padding="10" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Border>
+    </VerticalStackLayout>
+</ContentView>

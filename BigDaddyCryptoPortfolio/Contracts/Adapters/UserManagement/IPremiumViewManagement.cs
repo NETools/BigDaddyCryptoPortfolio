@@ -1,5 +1,4 @@
 ﻿using BigDaddyCryptoPortfolio.Models.Api;
-using BigDaddyCryptoPortfolio.Models.UserManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +17,6 @@ namespace BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement
         /// <param name="user">The user for which the view is to be loaded.</param>
         /// <param name="viewAddress">A view address of format rcns://remote/./views/</param>
         /// <returns></returns>
-        public ApiResult<T> LoadView<T>(User user, string viewAddress) where T : Element;
+        public ApiResult<T> LoadView<T>(string username, string viewAddress) where T : Element;
     }
 }

@@ -20,12 +20,13 @@ namespace BigDaddyCryptoPortfolio.Adapters.Data
 
         public async void LoadCoins()
         {
-            using var stream = await FileSystem.OpenAppPackageFileAsync("CoinList.json");
+            using var stream = await FileSystem.OpenAppPackageFileAsync("CoinList2.json");
             using var streamReader = new StreamReader(stream);
             var json = await streamReader.ReadToEndAsync();
             _coins = new List<Coin>(JsonSerializer.Deserialize<List<Coin>>(json));
+            _coins.RemoveAll(p => p.Id == "--");
 
-            CoinsLoaded?.Invoke();
+			CoinsLoaded?.Invoke();
         }
 
         public Coin? ResolveSymbol(string symbol)

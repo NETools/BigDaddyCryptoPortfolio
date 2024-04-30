@@ -9,12 +9,17 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Controllers
 {
     class AppUiController : IAppUiControl
     {
-        public event Action<string> AddTabRequested;
+        public event Action<ShellContent> AddTabRequested;
         public event Action<string> RemoveTabRequested;
 
-        public void AddTab(string tabName)
+        public void AddTab(ShellContent content)
         {
-            AddTabRequested?.Invoke(tabName);
+            AddTabRequested?.Invoke(content);
+        }
+
+        public void RemoveTab(string title)
+        {
+            RemoveTabRequested?.Invoke(title);
         }
     }
 }

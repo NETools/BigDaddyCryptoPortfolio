@@ -1,6 +1,4 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Authentication;
-using BigDaddyCryptoPortfolio.Algorithms.Hash;
-using BigDaddyCryptoPortfolio.Contracts.Algorithms;
 using BigDaddyCryptoPortfolio.Models;
 using Newtonsoft.Json;
 using System;
@@ -15,13 +13,6 @@ namespace BigDaddyCryptoPortfolio.Shared
 {
     public static class Toolkit
     {
-        public static Dictionary<CredentialType, IHash> HashingAlgorithms { get; private set; } = new Dictionary<CredentialType, IHash>()
-        {
-            { CredentialType.Md5, new HashMd5() },
-            { CredentialType.Sha512, new Hash256() },
-            { CredentialType.NoHash, null }
-        };
-
         public static string ToHex(this byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);

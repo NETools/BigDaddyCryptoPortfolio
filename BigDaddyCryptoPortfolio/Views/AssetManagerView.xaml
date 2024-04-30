@@ -8,20 +8,161 @@
 
     <ScrollView>
         <VerticalStackLayout Spacing="5">
-            <Grid RowDefinitions="Auto,*" Padding="10">
-                <Border BackgroundColor="#202530" Grid.RowSpan="2">
-                    <Border.Shadow>
-                        <Shadow Brush="White"/>
-                    </Border.Shadow>
+            <Grid HeightRequest="400" RowDefinitions="Auto,*" Padding="10">
+                <Border BackgroundColor="#202530" Grid.RowSpan="2" Stroke="Transparent">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
                     </Border.StrokeShape>
                 </Border>
 
-                <Label FontSize="Large" Text="Ziele" Margin="10"/>
-                <InfoViws:RevenueView Grid.Row="1" Margin="10"/>
+                <Label FontSize="Large" Text="Portfolio" Margin="10"/>
+                <InfoViws:AssetListView x:Name="AssetsView" Grid.Row="1" Margin="10"/>
+            </Grid>
+
+            <Grid RowDefinitions="Auto,*,Auto,Auto" Padding="10">
+                <Border BackgroundColor="#202530" Grid.RowSpan="4" Stroke="Transparent">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+
+                <Label FontSize="Large" Text="Transaktionen" Margin="10"/>
+
+                <Border Grid.Row="1" HorizontalOptions="Start" VerticalOptions="Start" Margin="20" Stroke="Transparent" HeightRequest="60" WidthRequest="60">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="60"/>
+                    </Border.StrokeShape>
+
+                    <Image Source="{Binding SelectedCoin.IconSource}"/>
+                </Border>
+
+                <CollectionView Margin="10" Grid.Row="2" ItemsSource="{Binding SelectedCoinTransactions}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="5,5,5,0">
+                                <Border Stroke="Transparent" Padding="5">
+                                    <Border.Background>
+                                        <LinearGradientBrush>
+                                            <GradientStop Color="#202530" Offset="0.0"/>
+                                            <GradientStop Color="#111826" Offset="1.0"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="25"/>
+                                    </Border.StrokeShape>
+
+                                    
+                                    <Label Text="{Binding TransactionId}"/>
+                                </Border>
+                            </Grid>
+                      
+                
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Grid Grid.Row="3" Margin="20,10,10,10" ColumnDefinitions="Auto,*">
+                    <Button Text="➕ Neue Transaktion hinzufügen" BackgroundColor="#111826" Clicked="OnAddTransaction"/>
+                </Grid>
+
+          
+
 
             </Grid>
+
+            <Grid RowDefinitions="*,*" Padding="10">
+                <Border BackgroundColor="#202530" Grid.RowSpan="2" Stroke="Transparent">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+
+                <Label FontSize="Large" Text="Statistik" Margin="10"/>
+
+                <ScrollView Orientation="Both" Grid.Row="1">
+                    <VerticalStackLayout Spacing="5">
+                        <Grid ColumnDefinitions="250,250,250" RowDefinitions="250,250" Margin="10">
+                            <Border BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="25"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Bestand"/>
+                                    <Label Text="--" FontSize="Large"/>
+                                    <Label Text="--" FontSize="Caption"/>
+                                </VerticalStackLayout>
+
+                            </Border>
+
+                            <Border Grid.Column="1" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="25"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Investiert"/>
+                                    <Label Text="--" FontSize="Large"/>
+                                    <Label Text="--" FontSize="Caption"/>
+                                </VerticalStackLayout>
+
+                            </Border>
+
+                            <Border Grid.Column="2" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="25"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Gesamtgewinn/-Verlust"/>
+                                    <Label Text="--" FontSize="Large"/>
+                                    <Label Text="--" FontSize="Caption"/>
+                                </VerticalStackLayout>
+
+                            </Border>
+
+                            <Border Grid.Row="1" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="25"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Durchschn. Kaufpreis"/>
+                                    <Label Text="--" FontSize="Large"/>
+                                    <Label Text="--" FontSize="Caption"/>
+                                </VerticalStackLayout>
+
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="1" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="25"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Durchschn. Verkaufspreis"/>
+                                    <Label Text="--" FontSize="Large"/>
+                                    <Label Text="--" FontSize="Caption"/>
+                                </VerticalStackLayout>
+
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="2" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="25"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="Gewinn realisiert"/>
+                                    <Label Text="--" FontSize="Large"/>
+                                    <Label Text="--" FontSize="Caption"/>
+                                </VerticalStackLayout>
+
+                            </Border>
+
+                        </Grid>
+
+
+                    </VerticalStackLayout>
+                </ScrollView>
+
+            </Grid>
+
+
         </VerticalStackLayout>
     </ScrollView>
      

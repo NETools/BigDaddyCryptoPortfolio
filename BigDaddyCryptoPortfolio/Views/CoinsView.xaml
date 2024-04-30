@@ -74,7 +74,7 @@
                 </Border>
             </Grid>
 
-            <ui:AssetListView x:Name="AssetsView" MaximumHeightRequest="400">
+            <ui:AssetListView x:Name="AssetsView">
                 <ui:AssetListView.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnElementClickedWindows"/>
                 </ui:AssetListView.GestureRecognizers>
