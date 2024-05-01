@@ -21,6 +21,17 @@ namespace BigDaddyCryptoPortfolio.Models
 		NoHype = 1 << 9,
 	}
 
+	public enum GenericMessageType
+	{
+		Failed,
+		EncryptionHandshake,
+		ActivationMessage,
+		SignInMessage,
+		SignUpMessage,
+		UpdatePortfolioMessage,
+		UpdateTransactionMessage
+	}
+
 	public enum CredentialType
 	{
 		Md5,

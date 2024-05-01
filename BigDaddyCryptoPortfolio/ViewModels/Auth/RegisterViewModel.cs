@@ -32,7 +32,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
         {
             var result = await userManagement.Register(new Dictionary<string, string>()
             {
-                { "email", Email },
+                { "username", Email },
                 { "password", Password }
             });
 

@@ -22,6 +22,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 
 			context.AddTab(new ShellContent()
 			{
+				Icon = "coin_stack.png",
 				Title = "Coins",
 				Route = "CoinsView",
 				ContentTemplate = new DataTemplate(() => new CoinsView(coinsViewModel, serviceProvider)),
@@ -29,6 +30,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 
 			context.AddTab(new ShellContent()
 			{
+				Icon = "asset_management.png",
 				Title = "Asset Manager",
 				Route = "AssetManagerView",
 				ContentTemplate = new DataTemplate(() => new AssetManagerView(assetManagerViewModel, coinsViewModel, portfolioViewModel))
@@ -36,6 +38,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 
 			context.AddTab(new ShellContent()
 			{
+				Icon = "portfolio.png",
 				Title = "Portfolio",
 				Route = "PortfolioView",
 				ContentTemplate = new DataTemplate(() => new PortfolioView(coinsViewModel, portfolioViewModel))

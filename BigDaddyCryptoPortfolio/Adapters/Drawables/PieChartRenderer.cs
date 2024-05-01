@@ -44,7 +44,7 @@ namespace BigDaddyCryptoPortfolio.Adapters.Drawables
 
         private static void AddCircularBar(PointCollection points, double cx, double cy, double radius, double diffPercentage, double startPercentage, double percentage)
         {
-            int samples = 25;
+            int samples = 50;
             double dt = (System.Math.PI * 2.0 * percentage) / samples;
 
             for (int sampleIndex = 0; sampleIndex <= samples; sampleIndex++)

@@ -1,5 +1,6 @@
-﻿using Amazon.CognitoIdentityProvider.Model;
+﻿
 using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
+using NSQM.Core.Producer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,10 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth.Session
 {
 	internal class UserSession : IUserSession
 	{
-		private List<AttributeType> _attributes;
 		public string Username { get; private set; }
-
-		public AttributeType GetAttribute(string key) => _attributes.Find(p => p.Name == key);
-
-		public void StartSession(string username, List<AttributeType> attributes)
+		public void StartSession(string username)
 		{
 			Username = username;
-			_attributes = attributes;
 		}
 	}
 }

@@ -41,7 +41,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCoinTransactions)));
 		}
 
-		public void SelectCoin(Coin coin)
+		public void SelectCoin(Coin? coin)
 		{
 			SelectedCoin = coin;
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCoin)));

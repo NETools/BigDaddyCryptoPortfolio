@@ -36,8 +36,8 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 		{
 			var result = await userManagement.Login(new Dictionary<string, string>()
 			{
-				{ "USERNAME", Email },
-				{ "PASSWORD", Password }
+				{ "username", Email },
+				{ "password", Password }
 			});
 
 			if (result.Okay)

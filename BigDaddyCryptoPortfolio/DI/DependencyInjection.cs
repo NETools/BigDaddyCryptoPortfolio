@@ -36,7 +36,11 @@ namespace BigDaddyCryptoPortfolio.DI
 
 			appBuilder.Services.AddSingleton<AuthSucceededAdapter>();
 
-			appBuilder.Services.AddSingleton<IUserManagement, CognitoUserManagement>();
+			appBuilder.Services.AddSingleton<IUserManagement, NSQMAuthServices>((services) =>
+			{
+				var authServices = new NSQMAuthServices("178.25.225.236:8000");
+				return authServices;
+			});
 			appBuilder.Services.AddSingleton<IUserSession, UserSession>();
             return appBuilder;
 		}

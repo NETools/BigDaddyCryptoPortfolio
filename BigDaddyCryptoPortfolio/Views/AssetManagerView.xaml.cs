@@ -14,9 +14,17 @@ public partial class AssetManagerView : ContentPage
 		_assetManagerViewModel = assetManagerViewModel;
 		BindingContext = _assetManagerViewModel;
 
+		portfolioViewModel.CoinRemoved += OnCoinRemoved;
+
 		AssetsView.Assets = portfolioViewModel.Coins;
 		AssetsView.CoinSelected += OnCoinSelected;
 		AssetsView.InitView();
+	}
+
+	private void OnCoinRemoved(Coin coin)
+	{
+		if (_assetManagerViewModel.SelectedCoin?.Id == coin.Id)
+			_assetManagerViewModel.SelectCoin(null);
 	}
 
 	private void OnCoinSelected(Coin coin)

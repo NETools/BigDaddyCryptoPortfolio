@@ -4,7 +4,8 @@
              x:Class="BigDaddyCryptoPortfolio.Ui.Auth.ConfirmView">
 
     <VerticalStackLayout>
-        <Grid VerticalOptions="Center" Margin="200">
+        <Grid HeightRequest="150"/>
+        <Grid VerticalOptions="Center">
             <Border Stroke="Transparent" Grid.Row="0" BackgroundColor="#202530" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="350">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="25"/>
@@ -43,7 +44,7 @@
                     </Grid>
 
                     <Grid ColumnDefinitions="Auto, Auto" HorizontalOptions="Center">
-                        <Label Grid.Column="1" Text="Zurück" Margin="-5, 10, 10, 10" TextDecorations="Underline">
+                        <Label Grid.Column="1" Text="Zurück" Margin="0, 10, 10, 10" TextDecorations="Underline">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnGoBackTapped"/>
                             </Label.GestureRecognizers>

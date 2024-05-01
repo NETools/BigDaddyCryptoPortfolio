@@ -156,8 +156,8 @@ public partial class CoinsView : ContentPage
 
             return swipeView;
         };
-        AssetsView.CoinSelected += (coin) => _coinsViewModel.SelectCoin(coin);
-        AssetsView.InitView();
+		AssetsView.CoinSelected += OnCoinSelected;
+		AssetsView.InitView();
         AssetsView.SetCoinSource("SelectedCategoryCoins", _coinsViewModel);
 
         _coinsViewModel.PropertyChanged += OnViewModelPropertyChanged;
@@ -170,10 +170,15 @@ public partial class CoinsView : ContentPage
         InfoContainer.Content = _miniSelectedCoinViews[_selectedMiniCoinViewIndex];
 	}
 
-    protected override async void OnAppearing()
+	private void OnCoinSelected(Coin coin)
+	{
+        AssetsView.MaximumHeightRequest = 400;
+		_coinsViewModel.SelectCoin(coin);
+	}
+
+	protected override async void OnAppearing()
     {
         base.OnAppearing();
-
 		StatusBorder.IsVisible = false;
         StatusBorder.FadeTo(0);
         await StatusBorder.TranslateTo(0, -20);
@@ -198,12 +203,14 @@ public partial class CoinsView : ContentPage
 	{
 		var deletedCoin = (Coin)((SwipeItemView)sender).BindingContext;
 		RemoveCoin(deletedCoin);
+		AssetsView.MaximumHeightRequest = Window.Height - 100;
 	}
 
 	private void AddInvoked(object? sender, EventArgs e)
 	{
         var addedCoin = (Coin)((SwipeItemView)sender).BindingContext;
 		AddCoin(addedCoin);
+		AssetsView.MaximumHeightRequest = Window.Height - 100;
 	}
 
 	private void AddCoin(Coin coin)
@@ -258,8 +265,13 @@ public partial class CoinsView : ContentPage
             if (selectedCoin.IsInPortfolio)
             {
                 RemoveCoin(selectedCoin);
+                AssetsView.MaximumHeightRequest = Window.Height - 100;
             }
-            else AddCoin(selectedCoin);
+            else
+            {
+                AddCoin(selectedCoin);
+				AssetsView.MaximumHeightRequest = Window.Height - 100;
+			}
         });
     }
 
@@ -268,7 +280,7 @@ public partial class CoinsView : ContentPage
         if (_coinsViewModel == null)
             return;
 
-		AssetsView.MaximumHeightRequest = double.PositiveInfinity;
+		AssetsView.MaximumHeightRequest = Window.Height - 100;
 		await CoinListContainer.FadeTo(0);
 
         var index = _coinsViewModel.Categories.IndexOf((string)e.CurrentSelection[0]);

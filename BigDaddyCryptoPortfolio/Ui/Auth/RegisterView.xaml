@@ -4,13 +4,14 @@
              x:Class="BigDaddyCryptoPortfolio.Ui.Auth.RegisterView">
 
     <VerticalStackLayout>
-        <Grid VerticalOptions="Center" Margin="100">
+        <Grid HeightRequest="100"/>
+        <Grid VerticalOptions="Center">
             <Border Stroke="Transparent" Grid.Row="0" BackgroundColor="#202530" HorizontalOptions="Center" VerticalOptions="Center" WidthRequest="350">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="25"/>
                 </Border.StrokeShape>
                 <VerticalStackLayout>
-                    <Label Text="Login" HorizontalOptions="Center" FontSize="18.72" Margin="0,50,0,0"/>
+                    <Label Text="Registrieren" HorizontalOptions="Center" FontSize="18.72" Margin="0,50,0,0"/>
 
                     <Border Margin="10" Stroke="Transparent">
                         <Border.StrokeShape>

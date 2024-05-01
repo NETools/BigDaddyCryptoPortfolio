@@ -74,12 +74,6 @@
                 </Border>
             </Grid>
 
-            <ui:AssetListView x:Name="AssetsView">
-                <ui:AssetListView.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnElementClickedWindows"/>
-                </ui:AssetListView.GestureRecognizers>
-            </ui:AssetListView>
-
             <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0.15" BackgroundColor="#202530">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="25"/>
@@ -89,6 +83,13 @@
             </Border>
 
 
+            <ui:AssetListView x:Name="AssetsView">
+                <ui:AssetListView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnElementClickedWindows"/>
+                </ui:AssetListView.GestureRecognizers>
+            </ui:AssetListView>
+
+    
             <Grid IsVisible="{Binding IsCoinSelected}" RowDefinitions="Auto, Auto">
                 <Border  
                 BackgroundColor="#202530" 

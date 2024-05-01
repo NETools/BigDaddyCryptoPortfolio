@@ -58,5 +58,66 @@ namespace BigDaddyCryptoPortfolio.Shared
             return deepCopy;
         }
 
-    }
+		public static byte[] GenerateRandomKey()
+		{
+			using (Aes aes = Aes.Create())
+			{
+				aes.GenerateKey();
+				return aes.Key;
+			}
+		}
+
+		// Generate a random initialization vector (IV)
+		public static byte[] GenerateRandomIV()
+		{
+			using (Aes aes = Aes.Create())
+			{
+				aes.GenerateIV();
+				return aes.IV;
+			}
+		}
+
+		public static byte[] Encrypt(byte[] data, string publicKey)
+		{
+			using (RSACryptoServiceProvider rsa = new())
+			{
+				rsa.FromXmlString(publicKey);
+				return rsa.Encrypt(data, false);
+			}
+		}
+
+		public static bool VerifySignature(byte[] data, byte[] signature, string publicKey)
+		{
+			using (RSACryptoServiceProvider rsa = new())
+			{
+				rsa.FromXmlString(publicKey);
+				return rsa.VerifyData(data, SHA256.Create(), signature);
+			}
+		}
+
+		public static byte[] AesEncrypt(byte[] data, byte[] key, byte[] iv)
+		{
+			using (Aes aes = Aes.Create())
+			{
+				aes.Key = key;
+				aes.IV = iv;
+
+				// Create an encryptor to perform the stream transform
+				ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+				// Create the streams used for encryption
+				using (MemoryStream msEncrypt = new MemoryStream())
+				{
+					using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+					{
+						// Write all data to the crypto stream and flush it
+						csEncrypt.Write(data, 0, data.Length);
+						csEncrypt.FlushFinalBlock();
+						return msEncrypt.ToArray();
+					}
+				}
+			}
+		}
+
+	}
 }

@@ -1,5 +1,4 @@
-﻿using Amazon.CognitoIdentityProvider.Model;
-using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
+﻿using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels.Auth;
 using System;
 using System.Collections.Generic;
@@ -34,7 +33,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 		{
 			var result = await userManagement.ConfirmUser(new Dictionary<string, string>()
 			{
-				{ "email", Email },
+				{ "username", Email },
 				{ "code", ConfirmationCode }
 			});
 
@@ -52,7 +51,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 		{
 			var result = await userManagement.ResendCode(new Dictionary<string, string>()
 			{
-				{ "email", Email },
+				{ "username", Email },
 			});
 
 			if (result.Okay)

@@ -92,8 +92,9 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
+		public event Action<Coin> CoinRemoved;
 
-        public PortfolioViewModel(ICoinDataProvider coinDataProvider)
+		public PortfolioViewModel(ICoinDataProvider coinDataProvider)
         {
             _coinDataProvider = coinDataProvider;
             _scoreCalculation = new ScoreCalculationAdapter(this);
@@ -159,7 +160,9 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             RemoveFromAsset(coin);
             UpdateIndicators();
             _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
-            
+
+            CoinRemoved?.Invoke(coin);
+
             StateHasChanged();
 
             return true;

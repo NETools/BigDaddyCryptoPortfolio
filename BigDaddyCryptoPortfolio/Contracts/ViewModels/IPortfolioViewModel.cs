@@ -24,6 +24,8 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
         public double Score { get; }
         public string EvaluationText { get; }
 
+        public event Action<Coin> CoinRemoved;
+
         public bool AddCoin(string symbol);
         public bool RemoveCoin(string symbol);
 
