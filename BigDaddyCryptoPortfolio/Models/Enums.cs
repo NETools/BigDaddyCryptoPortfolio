@@ -29,7 +29,8 @@ namespace BigDaddyCryptoPortfolio.Models
 		SignInMessage,
 		SignUpMessage,
 		UpdatePortfolioMessage,
-		UpdateTransactionMessage
+		UpdateTransactionMessage,
+		RetrievePortfolio
 	}
 
 	public enum CredentialType

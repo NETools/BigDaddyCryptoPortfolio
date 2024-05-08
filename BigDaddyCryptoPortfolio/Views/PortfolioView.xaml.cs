@@ -124,9 +124,9 @@ public partial class PortfolioView : ContentPage
         DrawPieChart();
     }
 
-    private void DeleteSwipeItem_Invoked(object? sender, EventArgs e)
+    private async void DeleteSwipeItem_Invoked(object? sender, EventArgs e)
     {
-        _coinsViewModel.DeleteCoin(AssetListView.SelectedCoin.Symbol);
+        await _coinsViewModel.DeleteCoin(AssetListView.SelectedCoin.Symbol, true);
     }
 
     private void OnPortfolioViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -183,11 +183,11 @@ public partial class PortfolioView : ContentPage
         }
         var selectedCoin = AssetListView.SelectedCoin;
 
-        _buttonTapDetection.HandleTapping(AssetListView, AssetListView.SelectedCoin, () =>
+        _buttonTapDetection.HandleTapping(AssetListView, AssetListView.SelectedCoin, async () =>
         {
             if (selectedCoin == null)
                 return;
-            _coinsViewModel.DeleteCoin(AssetListView.SelectedCoin.Symbol);
+            await _coinsViewModel.DeleteCoin(AssetListView.SelectedCoin.Symbol, true);
         });
     }
 }

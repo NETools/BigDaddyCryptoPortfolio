@@ -4,12 +4,13 @@ using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels.Auth;
 using BigDaddyCryptoPortfolio.Views;
+using BigDaddyCryptoPortfolio.Views.SecondOrder;
 using System.Collections.Specialized;
 
 namespace BigDaddyCryptoPortfolio
 {
 
-    class Settings : RouteFactory
+    class AboutRouteFactory : RouteFactory
     {
         public override Element GetOrCreate()
         {
@@ -24,7 +25,7 @@ namespace BigDaddyCryptoPortfolio
 
             var coinDataProvider = services.GetService<ICoinDataProvider>();
 
-            return new BitvavoSynchronizationView(settingsViewModel, coinsViewModel, portfolioViewModel, services, coinDataProvider);    
+            return new AboutView();    
         }
     }
 
@@ -38,7 +39,7 @@ namespace BigDaddyCryptoPortfolio
             context.AddTabRequested += OnAddTabRequested;
 			context.RemoveTabRequested += OnRemoveTabRequested;
 
-            Routing.RegisterRoute("views/coins/settings", new Settings());
+            Routing.RegisterRoute("views/coins/settings", new AboutRouteFactory());
 
             Tabs.Items.Add(new ShellContent()
             {

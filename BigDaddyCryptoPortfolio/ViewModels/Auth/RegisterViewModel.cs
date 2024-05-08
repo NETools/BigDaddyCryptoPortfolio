@@ -36,9 +36,10 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
                 { "password", Password }
             });
 
-            if (result.Okay)
+            if (result.Result)
             {
-                Message = "Nutzer wurde erfolgreich registriert.";
+                Message = @"Nutzer wurde erfolgreich registriert.
+Bitte schauen Sie in Ihrem E-Mail Postfach (notfalls im Spamordner) nach und aktivieren Sie Ihr Account.";
 			}
             else
             {

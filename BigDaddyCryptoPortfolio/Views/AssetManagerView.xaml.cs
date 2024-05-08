@@ -32,8 +32,31 @@ public partial class AssetManagerView : ContentPage
 		_assetManagerViewModel.SelectCoin(coin);
 	}
 
-	private void OnAddTransaction(object sender, EventArgs e)
+	private async void OnAddTransaction(object sender, EventArgs e)
 	{
+		await AddTransactionButton.ScaleTo(0.9, 100);
+		await AddTransactionButton.ScaleTo(1.0, 100);
+
 		_assetManagerViewModel.AddTransaction(TransactionSide.Buy, DateTime.Now, 0, 0, 0);
+	}
+
+	private void OnPickerSelectedIndexChanged(object sender, EventArgs e)
+	{
+		if (sender is not Picker picker)
+			return;
+		if (picker.BindingContext is not Transaction transaction)
+			return;
+
+		transaction.Side = (TransactionSide)picker.SelectedIndex;
+	}
+
+	private void DatePicker_DateSelected(object sender, DateChangedEventArgs e)
+	{
+		if (sender is not DatePicker datePicker)
+			return;
+		if (datePicker.BindingContext is not Transaction transaction)
+			return;
+
+		transaction.Date = e.NewDate;
 	}
 }

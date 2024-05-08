@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BigDaddyCryptoPortfolio.Views.SecondOrder.AboutView"
+             Title="Über"
+             BackgroundColor="#111826">
+
+    <ContentPage.Resources>
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                               Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="5">
+            <Grid HeightRequest="300" RowDefinitions="Auto,*" Padding="10">
+                <Border BackgroundColor="#202530" Grid.RowSpan="2" Stroke="Transparent">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+
+                <Label FontSize="Large" Text="Über" Margin="10"/>
+                <Label FontSize="Body" Text="{Binding AboutText}" Margin="10" Grid.Row="1"/>
+            </Grid>
+
+            <Grid RowDefinitions="Auto,Auto,250,Auto">
+                <Border BackgroundColor="#202530" Grid.RowSpan="4" Stroke="Transparent">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                </Border>
+                <Label FontSize="Large" Text="Kontaktformular" Margin="10"/>
+                <Entry  MaxLength="80" IsSpellCheckEnabled="True" Placeholder="Titel (maximal 80 Zeichen)" Margin="10" Grid.Row="1"/>
+                <Editor MaxLength="800" Placeholder="Details (maximal 500 Zeichen)" Margin="10" Grid.Row="2" VerticalTextAlignment="Start" IsSpellCheckEnabled="True"/>
+                <Button Text="Abschicken" Margin="10,10,50,10" Grid.Row="3" WidthRequest="100" HorizontalOptions="End"/>
+            </Grid>
+            
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

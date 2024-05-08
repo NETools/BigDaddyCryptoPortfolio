@@ -1,5 +1,6 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.Maths;
 using BigDaddyCryptoPortfolio.Contracts.Adapters;
+using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Models.Ui;
@@ -21,6 +22,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         private bool _isDirty = true;
         private double _lastScore;
 
+        private ISynchronizationManagement<string, List<string>> _synchronizationManagement;
         private ICoinDataProvider _coinDataProvider;
 
         private Dictionary<CoinCategory, int> _categoryIndex = new Dictionary<CoinCategory, int>()
@@ -94,9 +96,10 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
 		public event Action<Coin> CoinRemoved;
 
-		public PortfolioViewModel(ICoinDataProvider coinDataProvider)
+		public PortfolioViewModel(ICoinDataProvider coinDataProvider, ISynchronizationManagement<string, List<string>> synchronizationManagement)
         {
-            _coinDataProvider = coinDataProvider;
+            _synchronizationManagement = synchronizationManagement;
+			_coinDataProvider = coinDataProvider;
             _scoreCalculation = new ScoreCalculationAdapter(this);
 
             for (int i = 0; i < AllocationFullfillmentsIndicator.Length; i++)
@@ -134,14 +137,14 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
         }
 
-        public bool AddCoin(string symbol)
+        public async Task<bool> AddCoin(string symbol, bool makeApiCall)
         {
             var coin = _coinDataProvider.ResolveSymbol(symbol);
 
             if (Coins.Any(p => p.Symbol == coin.Symbol))
                 return false;
 
-            AddToAssets(coin);
+            await AddToAssets(coin, makeApiCall);
             UpdateIndicators();
             _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
 
@@ -150,14 +153,14 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             return true;
         }
 
-        public bool RemoveCoin(string symbol)
+        public async Task<bool> RemoveCoin(string symbol, bool makeApiCall)
         {
             var coin = _coinDataProvider.ResolveSymbol(symbol);
 
             if (!Coins.Any(p => p.Symbol == coin.Symbol))
                 return false;
 
-            RemoveFromAsset(coin);
+            await RemoveFromAsset(coin, makeApiCall);
             UpdateIndicators();
             _scoreCalculation.SetEvalColors(AllocationFullfillmentsIndicator);
 
@@ -239,7 +242,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Coins)));
         }
 
-        private void AddToAssets(Coin coin)
+        private async Task AddToAssets(Coin coin, bool makeApiCall)
         {
             var categories = EnumToolKit.GetCoinCategories(coin.Category);
             foreach (var category in categories)
@@ -254,10 +257,15 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
             Coins.Add(coin);
 
+            if (makeApiCall)
+            {
+                await _synchronizationManagement.Push(coin.Symbol, TransactionType.Add);
+            }
+
             TotalCointCount++;
         }
 
-        private void RemoveFromAsset(Coin coin)
+        private async Task RemoveFromAsset(Coin coin, bool makeApiCall)
         {
             var categories = EnumToolKit.GetCoinCategories(coin.Category);
             foreach (var category in categories)
@@ -271,7 +279,11 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
             Coins.Remove(coin);
 
-            TotalCointCount--;
+            if (makeApiCall)
+            {
+                await _synchronizationManagement.Push(coin.Symbol, TransactionType.Remove);
+            }
+			TotalCointCount--;
         }
     }
 }

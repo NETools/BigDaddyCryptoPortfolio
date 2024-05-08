@@ -11,6 +11,7 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 {
 	public interface IAssetManagerViewModel : INotifyPropertyChanged
 	{
+		public IPortfolioViewModel Portfolio { get; }
 		public IDictionary<string, IList<Transaction>> Transactions { get; }
 		public IList<Transaction> SelectedCoinTransactions { get; }
 		public Coin? SelectedCoin { get; }

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.Models.Exchange
 {
-	public struct ResponseMessage
+	internal struct UpdatePortfolioMessage
 	{
 		[JsonInclude]
-		public HttpStatusCode Status;
+		public string Username;
 		[JsonInclude]
-		public string Message;
+		public string CoinId;
 		[JsonInclude]
-		public byte[] Data;
+		public TransactionType Action;
 	}
 }

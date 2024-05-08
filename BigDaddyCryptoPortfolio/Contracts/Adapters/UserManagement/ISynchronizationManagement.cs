@@ -1,4 +1,5 @@
-﻿using BigDaddyCryptoPortfolio.Models.Api;
+﻿using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Api;
 using BigDaddyCryptoPortfolio.Models.Dtos;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,9 @@ using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement
 {
-    public interface ISynchronizationManagement
+    public interface ISynchronizationManagement<PushType, RetrieveType>
     {
-        public ApiResult<SynchronizationResponse> BeginCommit(string user);
-        public void Push<T>(SynchronizationTask<T> action);
-        public ApiResult<SynchronizationResponse> EndCommit();
+        public Task<ApiResult<RetrieveType>> Retrieve();
+        public Task<ApiResult<bool>> Push(PushType data, TransactionType transactionType);
     }
 }

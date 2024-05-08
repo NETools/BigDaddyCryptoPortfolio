@@ -1,4 +1,5 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.API.Auth;
+using BigDaddyCryptoPortfolio.Adapters.API.Synchronization;
 using BigDaddyCryptoPortfolio.Adapters.Data;
 using BigDaddyCryptoPortfolio.Contracts.Adapters;
 using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
@@ -41,6 +42,13 @@ namespace BigDaddyCryptoPortfolio.DI
 				var authServices = new NSQMAuthServices("178.25.225.236:8000");
 				return authServices;
 			});
+
+			appBuilder.Services.AddSingleton<ISynchronizationManagement<string, List<string>>, NSQMSynchronization>((services) =>
+			{
+				var userSession = services.GetService<IUserSession>();
+				return new NSQMSynchronization(userSession, "178.25.225.236:8000");
+			});
+
 			appBuilder.Services.AddSingleton<IUserSession, UserSession>();
             return appBuilder;
 		}

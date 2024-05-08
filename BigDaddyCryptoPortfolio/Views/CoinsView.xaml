@@ -33,7 +33,8 @@
     </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Einstellungen" Order="Secondary" Command="{Binding ToolBarSettingsCommand}"/>
+        <ToolbarItem Text="Über" Order="Secondary" Command="{Binding ToolBarAboutCommand}"/>
+        <ToolbarItem Text="Ausloggen" Order="Secondary" Command="{Binding ToolBarSettingsCommand}"/>
     </ContentPage.ToolbarItems>
 
 
@@ -90,7 +91,7 @@
             </ui:AssetListView>
 
     
-            <Grid IsVisible="{Binding IsCoinSelected}" RowDefinitions="Auto, Auto">
+            <Grid x:Name="InfoGrid" RowDefinitions="Auto, Auto">
                 <Border  
                 BackgroundColor="#202530" 
                 Margin="10" 

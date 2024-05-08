@@ -19,13 +19,14 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
         public IList<Coin> SelectedCategoryCoins { get; }
 		public Coin? SelectedCoin { get; }
 		public string UiInfoMessage { get; }
+		public bool IsCoinSelected { get; }
 
 		public event Action SelectedCoinChanged;
 
         public void SelectCategory(int index);
 		public void SelectCoin(Coin coin);
 
-		public void AddCoin(string symbol);
-		public void DeleteCoin(string symbol);
+		public Task AddCoin(string symbol, bool makeApiCall);
+		public Task DeleteCoin(string symbol, bool makeApiCall);
 	}
 }

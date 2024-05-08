@@ -26,8 +26,8 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 
         public event Action<Coin> CoinRemoved;
 
-        public bool AddCoin(string symbol);
-        public bool RemoveCoin(string symbol);
+        public Task<bool> AddCoin(string symbol, bool makeApiCall);
+        public Task<bool> RemoveCoin(string symbol, bool makeApiCall);
 
         public void SelectCategory(CoinCategory category);
         public void UnselectAll();

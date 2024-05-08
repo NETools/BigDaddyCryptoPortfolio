@@ -39,7 +39,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
                 if (coin == null)
                     continue;
 
-                coinsViewModel.AddCoin(asset.Symbol);
+                await coinsViewModel.AddCoin(asset.Symbol, true);
                 yield return coin;
             }
 

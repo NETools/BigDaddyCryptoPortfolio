@@ -28,7 +28,7 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model
 
     public enum TransactionSide
     {
-        Sell,
-        Buy
+        Buy,
+        Sell
     }
 }

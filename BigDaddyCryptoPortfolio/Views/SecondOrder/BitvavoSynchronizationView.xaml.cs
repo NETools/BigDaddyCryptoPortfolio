@@ -4,7 +4,7 @@ using BigDaddyCryptoPortfolio.ViewModels;
 using RemoteCodeLoader.Attributes;
 using System.Net.WebSockets;
 
-namespace BigDaddyCryptoPortfolio.Views
+namespace BigDaddyCryptoPortfolio.Views.SecondOrder
 {
 	[RemoteSourceCode(
 		 "rcns://views/contentpages/demo.xaml", 

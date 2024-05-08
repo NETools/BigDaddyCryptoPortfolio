@@ -57,7 +57,8 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
 		public bool IsCoinSelected => _selectedCoin != null;
 
-		public ICommand ToolBarSettingsCommand { get; set; }
+		public ICommand ToolBarAboutCommand { get; set; }
+		public ICommand ToolBarLogoutCommand { get; set; }
 
 		private string _uiInfoMessage;
         public string UiInfoMessage
@@ -82,7 +83,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
             SelectCategory(0);
 
-            ToolBarSettingsCommand = new BasicSettingsShowCommand();
+            ToolBarAboutCommand = new BasicSettingsShowCommand();
         }
 
         private void OnCoinsLoaded()
@@ -106,11 +107,11 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCategoryColor)));
 		}
 
-		public void AddCoin(string symbol)
+		public async Task AddCoin(string symbol, bool makeApiCall)
 		{
 			var coin = _coinDataProvider.ResolveSymbol(this, symbol);
 
-			if (!_portfolioViewModel.AddCoin(coin.Symbol))
+			if (!await _portfolioViewModel.AddCoin(coin.Symbol, makeApiCall))
 				return;
 
 			coin.IsInPortfolio = true;
@@ -122,11 +123,11 @@ namespace BigDaddyCryptoPortfolio.ViewModels
             SelectedCoin = null;
 		}
 
-		public void DeleteCoin(string symbol)
+		public async Task DeleteCoin(string symbol, bool makeApiCall)
 		{
 			var coin = _coinDataProvider.ResolveSymbol(this, symbol);
 
-			if (!_portfolioViewModel.RemoveCoin(coin.Symbol))
+			if (!await _portfolioViewModel.RemoveCoin(coin.Symbol, makeApiCall))
 				return;
 
 			coin.IsInPortfolio = false;

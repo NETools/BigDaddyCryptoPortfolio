@@ -95,6 +95,32 @@ namespace BigDaddyCryptoPortfolio.Shared
 			}
 		}
 
+		public static byte[] AesDecrypt(this byte[] data, byte[] key, byte[] iv)
+		{
+			using (Aes aes = Aes.Create())
+			{
+				aes.Key = key;
+				aes.IV = iv;
+
+				// Create a decryptor to perform the stream transform
+				ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+				// Create the streams used for decryption
+				using (MemoryStream msDecrypt = new MemoryStream(data))
+				{
+					using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+					{
+						// Read the decrypted bytes from the decrypting stream
+						using (MemoryStream msDecrypted = new MemoryStream())
+						{
+							csDecrypt.CopyTo(msDecrypted);
+							return msDecrypted.ToArray();
+						}
+					}
+				}
+			}
+		}
+
 		public static byte[] AesEncrypt(byte[] data, byte[] key, byte[] iv)
 		{
 			using (Aes aes = Aes.Create())

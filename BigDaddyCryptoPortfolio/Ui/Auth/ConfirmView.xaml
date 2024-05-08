@@ -62,7 +62,7 @@
 
         </Grid>
 
-        <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0" BackgroundColor="#202530" Margin="-50">
+        <Border Stroke="Transparent" x:Name="StatusBorder" Opacity="0" BackgroundColor="#202530">
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="25"/>
             </Border.StrokeShape>

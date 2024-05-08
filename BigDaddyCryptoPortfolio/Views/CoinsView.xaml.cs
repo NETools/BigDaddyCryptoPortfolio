@@ -172,7 +172,7 @@ public partial class CoinsView : ContentPage
 
 	private void OnCoinSelected(Coin coin)
 	{
-        AssetsView.MaximumHeightRequest = 400;
+        //AssetsView.MaximumHeightRequest = 400;
 		_coinsViewModel.SelectCoin(coin);
 	}
 
@@ -181,48 +181,82 @@ public partial class CoinsView : ContentPage
         base.OnAppearing();
 		StatusBorder.IsVisible = false;
         StatusBorder.FadeTo(0);
+
+
+        InfoGrid.IsVisible = false;
+        InfoGrid.FadeTo(0);
+
         await StatusBorder.TranslateTo(0, -20);
     }
 
     private async void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-		if (e.PropertyName == "UiInfoMessage")
-		{
-			StatusBorder.IsVisible = true;
-			StatusBorder.FadeTo(1, 1000);
-			await StatusBorder.TranslateTo(0, 0, 1200);
+        if (e.PropertyName == "UiInfoMessage")
+        {
+            StatusBorder.IsVisible = true;
+            StatusBorder.FadeTo(1, 1000);
+            await StatusBorder.TranslateTo(0, 0, 1200);
             StatusBorder.FadeTo(0);
             await StatusBorder.TranslateTo(-20, 0);
             StatusBorder.IsVisible = false;
             await StatusBorder.TranslateTo(0, -20);
         }
+        else if (e.PropertyName == "IsCoinSelected")
+        {
+            if (_coinsViewModel.IsCoinSelected)
+            {
+				await InfoGrid.FadeTo(0, 150);
+
+				AnimateHeightRequest(Window.Height - 100, 400, 1000);
+				InfoGrid.IsVisible = true;
+				await InfoGrid.FadeTo(1, 350);
+
+			}
+            else
+            {
+				await InfoGrid.FadeTo(0, 350);
+                InfoGrid.IsVisible = false;
+				AnimateHeightRequest(400, Window.Height - 100, 250);
+			}
+
+        }
     }
 
+	async void AnimateHeightRequest(double fromValue, double toValue, uint length)
+	{
+		// Create animation
+		Animation animation = new Animation(v => AssetsView.MaximumHeightRequest = v, fromValue, toValue);
 
-	private void DeleteInvoked(object? sender, EventArgs e)
+		// Start animation
+		 animation.Commit(this, "HeightAnimation", length: length, easing: Easing.Linear);
+	}
+
+	private async void DeleteInvoked(object? sender, EventArgs e)
 	{
 		var deletedCoin = (Coin)((SwipeItemView)sender).BindingContext;
-		RemoveCoin(deletedCoin);
-		AssetsView.MaximumHeightRequest = Window.Height - 100;
+		await RemoveCoin(deletedCoin);
+		//AssetsView.MaximumHeightRequest = Window.Height - 100;
+        //AnimateHeightRequest(400, Window.Height - 100, 1000);
 	}
 
-	private void AddInvoked(object? sender, EventArgs e)
+	private async void AddInvoked(object? sender, EventArgs e)
 	{
         var addedCoin = (Coin)((SwipeItemView)sender).BindingContext;
-		AddCoin(addedCoin);
-		AssetsView.MaximumHeightRequest = Window.Height - 100;
+		await AddCoin(addedCoin);
+		//AssetsView.MaximumHeightRequest = Window.Height - 100;
+		//AnimateHeightRequest(400, Window.Height - 100, 1000);
 	}
 
-	private void AddCoin(Coin coin)
+	private async Task AddCoin(Coin coin)
 	{
-        _coinsViewModel?.AddCoin(coin.Symbol);
+        await _coinsViewModel?.AddCoin(coin.Symbol, true);
         HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         AssetsView.Unselect();
     }
 
-	private void RemoveCoin(Coin coin)
+	private async Task RemoveCoin(Coin coin)
 	{
-        _coinsViewModel?.DeleteCoin(coin.Symbol);
+        await _coinsViewModel?.DeleteCoin(coin.Symbol, true);
         HapticFeedback.Default.Perform(HapticFeedbackType.LongPress);
         AssetsView.Unselect();
     }
@@ -251,26 +285,28 @@ public partial class CoinsView : ContentPage
 
     private void OnElementClickedWindows(object sender, TappedEventArgs e)
     {
-        AssetsView.MaximumHeightRequest = 400;
+        //AssetsView.MaximumHeightRequest = 400;
         if (DeviceInfo.Current.Platform != DevicePlatform.WinUI)
         {
             return;
         }
         var selectedCoin = AssetsView.SelectedCoin;
 
-        _buttonTapDetection.HandleTapping(AssetsView, AssetsView.SelectedCoin, () =>
+        _buttonTapDetection.HandleTapping(AssetsView, AssetsView.SelectedCoin, async () =>
         {
             if (selectedCoin == null)
                 return;
             if (selectedCoin.IsInPortfolio)
             {
-                RemoveCoin(selectedCoin);
-                AssetsView.MaximumHeightRequest = Window.Height - 100;
-            }
+                await RemoveCoin(selectedCoin);
+				//AssetsView.MaximumHeightRequest = Window.Height - 100;
+				//AnimateHeightRequest(400, Window.Height - 100, 1000);
+			}
             else
             {
-                AddCoin(selectedCoin);
-				AssetsView.MaximumHeightRequest = Window.Height - 100;
+                await AddCoin(selectedCoin);
+				//AssetsView.MaximumHeightRequest = Window.Height - 100;
+				//AnimateHeightRequest(400, Window.Height - 100, 1000);
 			}
         });
     }
@@ -280,7 +316,8 @@ public partial class CoinsView : ContentPage
         if (_coinsViewModel == null)
             return;
 
-		AssetsView.MaximumHeightRequest = Window.Height - 100;
+		//AssetsView.MaximumHeightRequest = Window.Height - 100;
+		
 		await CoinListContainer.FadeTo(0);
 
         var index = _coinsViewModel.Categories.IndexOf((string)e.CurrentSelection[0]);

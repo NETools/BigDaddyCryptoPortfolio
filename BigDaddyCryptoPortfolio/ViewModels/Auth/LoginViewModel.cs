@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 {
-	internal class LoginViewModel (IUserManagement userManagement, AuthSucceededAdapter context) : ILoginViewModel
+	internal class LoginViewModel (IUserManagement userManagement, ISynchronizationManagement<string, List<string>> synchronizationManagement, IUserSession userSession, ICoinsViewModel coinsViewModel, AuthSucceededAdapter context) : ILoginViewModel
 	{
 		public string Email { get; set; } = "enes.hergul215@gmail.com";
 		public string Password { get; set; } = "test215X[]";
@@ -43,6 +43,15 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 			if (result.Okay)
 			{
 				Message = "Nutzer wurde erfolgreich eingeloggt.";
+				userSession.StartSession(Email);
+
+				var response = await synchronizationManagement.Retrieve();
+				foreach (var symbol in response.Result)
+				{
+					await coinsViewModel.AddCoin(symbol, false);
+				}
+
+
 				context.Prepare();
 			}
 			else

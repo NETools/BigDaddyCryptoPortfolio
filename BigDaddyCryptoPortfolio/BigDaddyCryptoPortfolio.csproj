@@ -86,6 +86,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
+		<PackageReference Include="Humanizer" Version="2.14.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.9.2" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
@@ -137,7 +138,10 @@
 	  <MauiXaml Update="Views\PortfolioView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\BitvavoSynchronizationView.xaml">
+	  <MauiXaml Update="Views\SecondOrder\AboutView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SecondOrder\BitvavoSynchronizationView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
@@ -152,7 +156,7 @@
 	  <Compile Update="Views\PortfolioView.xaml.cs">
 	    <DependentUpon>PortfolioView.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\BitvavoSynchronizationView.xaml.cs">
+	  <Compile Update="Views\SecondOrder\BitvavoSynchronizationView.xaml.cs">
 	    <DependentUpon>BitvavoSynchronizationView.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>

@@ -3,9 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:InfoViws="clr-namespace:BigDaddyCryptoPortfolio.Ui.InfoViews"
              x:Class="BigDaddyCryptoPortfolio.Views.AssetManagerView"
+             xmlns:mtc="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="Asset Manager"
              BackgroundColor="#111826">
 
+    <ContentPage.Resources>
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                               Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+    
     <ScrollView>
         <VerticalStackLayout Spacing="5">
             <Grid HeightRequest="400" RowDefinitions="Auto,*" Padding="10">
@@ -15,11 +34,11 @@
                     </Border.StrokeShape>
                 </Border>
 
-                <Label FontSize="Large" Text="Portfolio" Margin="10"/>
+                <Label FontSize="Large" Text="{Binding Portfolio.Coins.Count, StringFormat='Portfolio ({0})'}" Margin="10"/>
                 <InfoViws:AssetListView x:Name="AssetsView" Grid.Row="1" Margin="10"/>
             </Grid>
 
-            <Grid RowDefinitions="Auto,*,Auto,Auto" Padding="10">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto" Padding="10">
                 <Border BackgroundColor="#202530" Grid.RowSpan="4" Stroke="Transparent">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
@@ -32,37 +51,73 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="60"/>
                     </Border.StrokeShape>
-
                     <Image Source="{Binding SelectedCoin.IconSource}"/>
                 </Border>
+                <ScrollView Orientation="Horizontal" Grid.Row="2">
+                    <CollectionView Margin="10"  ItemsSource="{Binding SelectedCoinTransactions}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
 
-                <CollectionView Margin="10" Grid.Row="2" ItemsSource="{Binding SelectedCoinTransactions}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Padding="5,5,5,0">
-                                <Border Stroke="Transparent" Padding="5">
-                                    <Border.Background>
-                                        <LinearGradientBrush>
-                                            <GradientStop Color="#202530" Offset="0.0"/>
-                                            <GradientStop Color="#111826" Offset="1.0"/>
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="25"/>
-                                    </Border.StrokeShape>
+                                <Grid ColumnDefinitions="20,100,50,150,50,100,50,100,50,100,50,100" RowDefinitions="Auto" Margin="0">
+                                    <Border BackgroundColor="#252530" Grid.ColumnSpan="20" Stroke="Transparent"/>
 
-                                    
-                                    <Label Text="{Binding TransactionId}"/>
-                                </Border>
-                            </Grid>
-                      
-                
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                                    <Border Grid.Column="1">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10"/>
+                                        </Border.StrokeShape>
+                                        <Picker x:Name="picker" TitleColor="White" TextColor="White" SelectedIndexChanged="OnPickerSelectedIndexChanged" SelectedIndex="{Binding Side}">
+                                            <Picker.ItemsSource>
+                                                <x:Array Type="{x:Type x:String}">
+                                                    <x:String>Kaufen</x:String>
+                                                    <x:String>Verkaufen</x:String>
+                                                </x:Array>
+                                            </Picker.ItemsSource>
+                                        </Picker>
+                                    </Border>
+                                    <Border Grid.Column="3">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10"/>
+                                        </Border.StrokeShape>
+                                        <DatePicker TextColor="White" DateSelected="DatePicker_DateSelected" Format="dd/MM/yyyy"/>
+                                    </Border>
 
+                                    <Border Grid.Column="5">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10"/>
+                                        </Border.StrokeShape>
+                                        <Entry Text="Test"/>
+                                    </Border>
+
+
+                                    <Border Grid.Column="7">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10"/>
+                                        </Border.StrokeShape>
+                                        <Entry Text="Test"/>
+                                    </Border>
+
+                                    <Border Grid.Column="9">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10"/>
+                                        </Border.StrokeShape>
+                                        <Entry Text="Test"/>
+                                    </Border>
+
+                                    <Border Grid.Column="11" Padding="10">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding HoldingPeriod}"/>
+                                    </Border>
+
+                                </Grid>
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
                 <Grid Grid.Row="3" Margin="20,10,10,10" ColumnDefinitions="Auto,*">
-                    <Button Text="➕ Neue Transaktion hinzufügen" BackgroundColor="#111826" Clicked="OnAddTransaction"/>
+                    <Button x:Name="AddTransactionButton" Text="➕ Neue Transaktion hinzufügen" BackgroundColor="#0a0d14" Clicked="OnAddTransaction"/>
                 </Grid>
 
           
