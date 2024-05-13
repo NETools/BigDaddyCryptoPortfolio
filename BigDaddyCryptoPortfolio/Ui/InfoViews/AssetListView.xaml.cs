@@ -138,20 +138,21 @@ public partial class AssetListView : ContentView
 
                 var symbol = new Label()
                 {
-                    FontAttributes = FontAttributes.Bold,
+                    FontAttributes = FontAttributes.None,
+                    FontSize = Device.GetNamedSize(NamedSize.Caption, typeof(Label))
                 };
-                symbol.SetBinding(Label.TextProperty, "Name");
+                symbol.SetBinding(Label.TextProperty, "Symbol");
 
                 labelingGrid.Add(symbol, 0, 1);
 
-                var isInPortfolio = new Label()
-                {
-                    Margin = 10,
-                    VerticalTextAlignment = TextAlignment.Center
-                };
-                isInPortfolio.SetBinding(Label.TextProperty, "IsInPortfolio");
+                //var isInPortfolio = new Label()
+                //{
+                //    Margin = 10,
+                //    VerticalTextAlignment = TextAlignment.Center
+                //};
+                //isInPortfolio.SetBinding(Label.TextProperty, "IsInPortfolio");
 
-                labelingGrid.AddWithSpan(isInPortfolio, 0, 1, 2, 1);
+                //labelingGrid.AddWithSpan(isInPortfolio, 0, 1, 2, 1);
 
                 itemGrid.Add(labelingGrid, 1, 0);
 

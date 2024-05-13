@@ -2,6 +2,7 @@
 using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels.Auth;
+using BigDaddyCryptoPortfolio.Models.Dtos;
 using BigDaddyCryptoPortfolio.Views;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,12 @@ using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 {
-	internal class LoginViewModel (IUserManagement userManagement, ISynchronizationManagement<string, List<string>> synchronizationManagement, IUserSession userSession, ICoinsViewModel coinsViewModel, AuthSucceededAdapter context) : ILoginViewModel
+	internal class LoginViewModel (
+		IUserManagement userManagement, 
+		ISynchronizationManagement<MessageBusNotification, MessageBusRetrievalMessage> synchronizationManagement, 
+		IUserSession userSession, 
+		ICoinsViewModel coinsViewModel, 
+		AuthSucceededAdapter context) : ILoginViewModel
 	{
 		public string Email { get; set; } = "enes.hergul215@gmail.com";
 		public string Password { get; set; } = "test215X[]";
@@ -45,7 +51,10 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 				Message = "Nutzer wurde erfolgreich eingeloggt.";
 				userSession.StartSession(Email);
 
-				var response = await synchronizationManagement.Retrieve();
+				var response = await synchronizationManagement.Retrieve(new MessageBusNotification()
+				{
+					
+				});
 				foreach (var symbol in response.Result)
 				{
 					await coinsViewModel.AddCoin(symbol, false);

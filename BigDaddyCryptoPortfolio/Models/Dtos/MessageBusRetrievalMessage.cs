@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.Models.Dtos
 {
-    public class SynchronizationTask<T>
+    internal struct MessageBusRetrievalMessage
     {
-        public T Data { get; set; }
-        public TransactionType TransactionType { get; set; }
+        [JsonInclude]
+        public RetrievalType RetrievalType;
+
     }
 }

@@ -2,6 +2,7 @@
 using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
 using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Models.Api;
+using BigDaddyCryptoPortfolio.Models.Dtos;
 using BigDaddyCryptoPortfolio.Models.Exchange;
 using BigDaddyCryptoPortfolio.Shared;
 using NSQM.Core.Model;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.Adapters.API.Synchronization
 {
-	internal class NSQMSynchronization : ISynchronizationManagement<string, List<string>>
+	internal class NSQMSynchronization : ISynchronizationManagement<MessageBusNotification, MessageBusRetrievalMessage>
 	{
 		private const string ServerPublicKey = "<RSAKeyValue><Modulus>tqfPpisNfHYJe3v2fBdMyvVtJWnimdK1rq+g3uKgNlYHFIfCIeLJ/gFcD8bcTRCgI8gSEzu48sGgnxzzSh/Gj7BSVrq2dTlFC5ma3z+t7khP5NYTT2JmlRgBi3plMM4rdqi8p47QWvzMojuut3wXsS+9XDnJ+0iVhw4XLcTs6kl28Y5z6z/GOzhC8W9XgPoJLWSr9kgNtTPIHzfIz9eaTvqA0np7iht6pzQxqJuhQKX7cGV3WztpijvT/KYdJrNXq+aAmra11I6i6rpHDJ9O2Sor7IFu2o/3vcsNTyxaYwCNvpCHNoQwqvSHgT91Io8xZdm/UJGMPeDAWEDHRYtSaguhe+43A/pCOaNzEtbyoEIUe+igq2iFUMi4ReEJvouv3piSlt16rjUgebic7+lHPuQDv3omIcM0mVHErceohfDxTAeTTAdL/S7tUOZ0rd9dm3jbFBE6rVDl79orjs6hKj8pQTWIv/BF51pFmIesNy0/Xc1rBXuH4ocF1Kzgkk7mZY5WrBkGoS77/uS/u8sMkVPCemUmS8szahIF0pcnb1hYPdVVuYeni9vL0eknUm1P30pWFaN9IPA4qzskCeu8I16RJO3q+u43wCxLxwbBvEhwxgKW6iZ68gnV2R/6LG8F1Z52n2taCFBKBEUITtnJQwocMCn2WJwKQKDUqCbJuPk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
@@ -47,7 +48,7 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Synchronization
 			await connection.Accept(NSQM.Data.Extensions.AckType.Accepted);
 		}
 
-		public async Task<ApiResult<bool>> Push(string data, TransactionType transactionType)
+		public async Task<ApiResult<bool>> Push(MessageBusNotification data, TransactionType transactionType)
 		{
 			if (!await InitConnection())
 			{
@@ -59,16 +60,9 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Synchronization
 				};
 			}
 
-			var updatePortfolioMessage = new UpdatePortfolioMessage()
-			{
-				  Action = transactionType,
-				  CoinId = data,
-				  Username = _userSession.Username
-			};
+			var message = GenericMessage.CreateAesEncryptedMessage(data.GenericMessageType, data.StructData, _key, _iv);
 
-			var message = GenericMessage.CreateAesEncryptedMessage(GenericMessageType.UpdatePortfolioMessage, updatePortfolioMessage, _key, _iv);
-
-			var handler = await _producer.PublishMessage("PortfolioExchangeService", "UpdatePortfolio", message.ToJsonBytes(Encoding.UTF8));
+			var handler = await _producer.PublishMessage(data.ChanneId, data.ChanneId, message.ToJsonBytes(Encoding.UTF8));
 			var apiResult = new ApiResult<bool>();
 			try
 			{
@@ -109,27 +103,22 @@ Dies kann auf eine kompromittierte Verbindung hinweisen. Überprüfen Sie Ihre N
 			return apiResult;
 		}
 
-		public async Task<ApiResult< List<string>>> Retrieve()
+		public async Task<ApiResult<MessageBusRetrievalMessage>> Retrieve(MessageBusNotification data)
 		{
 			if (!await InitConnection())
 			{
-				return new ApiResult<List<string>>()
+				return new ApiResult<MessageBusRetrievalMessage> ()
 				{
 					Code = HttpStatusCode.ServiceUnavailable,
 					Message = "Der Exchange-Server reagiert nicht. Bitte warten Sie einen Moment.",
-					Result = Enumerable.Empty<string>().ToList()
-				};
+					Result = new MessageBusRetrievalMessage()
+                };
 			}
 
-			var retrievePortfolioMessage = new RetrievePortfolioMessage()
-			{
-				Username = _userSession.Username
-			};
+			var message = GenericMessage.CreateAesEncryptedMessage(data.GenericMessageType, data.StructData, _key, _iv);
 
-			var message = GenericMessage.CreateAesEncryptedMessage(GenericMessageType.RetrievePortfolio, retrievePortfolioMessage, _key, _iv);
-
-			var handler = await _producer.PublishMessage("PortfolioExchangeService", "RetrievePortfolio", message.ToJsonBytes(Encoding.UTF8));
-			var apiResult = new ApiResult<List<string>>();
+			var handler = await _producer.PublishMessage(data.ChanneId, data.MessageId, message.ToJsonBytes(Encoding.UTF8));
+			var apiResult = new ApiResult<MessageBusRetrievalMessage>();
 			try
 			{
 				using var _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -138,20 +127,19 @@ Dies kann auf eine kompromittierte Verbindung hinweisen. Überprüfen Sie Ihre N
 
 				if (!VerifyMessage(signedMessage))
 				{
-					return new ApiResult<List<string>>()
+					return new ApiResult<MessageBusRetrievalMessage>()
 					{
 						Code = HttpStatusCode.NetworkAuthenticationRequired,
 						Message = @"Signatur stimmt nicht überein.
 Dies kann auf eine kompromittierte Verbindung hinweisen. Überprüfen Sie Ihre Netzwerkverbindung und stellen Sie sicher, dass Sie in keinem öffentlichen Netz sind.",
-						Result = Enumerable.Empty<string>().ToList()
+						Result = new MessageBusRetrievalMessage()
 					};
 				}
 
 				var apiResponse = signedMessage.Data.ToStruct<ApiResponse<GenericMessageType>>(Encoding.UTF8);
 				var responseMessage = Toolkit.AesDecrypt(apiResponse.Data, _key, _iv).ToStruct<ResponseMessage>(Encoding.UTF8);
 
-
-				apiResult.Result = JsonSerializer.Deserialize<List<string>>(Encoding.UTF8.GetString(responseMessage.Data));
+				apiResult.Result = JsonSerializer.Deserialize<MessageBusRetrievalMessage>(Encoding.UTF8.GetString(responseMessage.Data));
 				apiResult.Message = responseMessage.Message;
 				apiResult.Code = responseMessage.Status;
 
@@ -160,7 +148,7 @@ Dies kann auf eine kompromittierte Verbindung hinweisen. Überprüfen Sie Ihre N
 			catch
 			{
 				apiResult.Message = "Die Verbindung zum Service ist fehlgeschlagen. Versuchen Sie es noch einmal.";
-				apiResult.Result = Enumerable.Empty<string>().ToList();
+				apiResult.Result = new MessageBusRetrievalMessage();
 				apiResult.Code = HttpStatusCode.RequestTimeout;
 
 				await ResetConnection();

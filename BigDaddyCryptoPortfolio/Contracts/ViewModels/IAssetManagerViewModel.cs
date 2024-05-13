@@ -15,8 +15,13 @@ namespace BigDaddyCryptoPortfolio.Contracts.ViewModels
 		public IDictionary<string, IList<Transaction>> Transactions { get; }
 		public IList<Transaction> SelectedCoinTransactions { get; }
 		public Coin? SelectedCoin { get; }
+		public double SelectedCoinPrice { get; }
 
-		public void SelectCoin(Coin? coin);
+		public IDictionary<string, TransactionHistory> TransactionHistory { get; }
+        public TransactionHistory SelectedCoinTransactionsHistory { get; }
+
+
+        public void SelectCoin(Coin? coin);
 		public void AddTransaction(TransactionSide action, DateTime date, double pricePerCoin, double amountInEur, double quantityCoins);
 	}
 }

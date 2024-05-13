@@ -73,6 +73,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Ui\Popups\**" />
+	  <Compile Remove="Ui\Popups\**" />
+	  <EmbeddedResource Remove="Ui\Popups\**" />
+	  <MauiCss Remove="Ui\Popups\**" />
+	  <MauiXaml Remove="Ui\Popups\**" />
+	  <None Remove="Ui\Popups\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Resources\Fonts\alata-regular.ttf" />
 	  <None Remove="Resources\Fonts\UniSansHeavy.otf" />
 	  <None Remove="Resources\Fonts\UniSansHeavyItalic.otf" />
@@ -162,10 +171,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Ui\Popups\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Reference Include="NSQM.Core">
 	    <HintPath>..\..\NSQM.Core\NSQM.Core\bin\Debug\net8.0\NSQM.Core.dll</HintPath>
 	  </Reference>
@@ -173,7 +178,7 @@
 	    <HintPath>..\..\NSQM.Core\NSQM.Core\bin\Debug\net8.0\NSQM.Data.dll</HintPath>
 	  </Reference>
 	  <Reference Include="RemoteCodeLoader">
-	    <HintPath>..\..\RemoteCodeLoader\RemoteCodeLoader\obj\Debug\net8.0-windows10.0.19041.0\RemoteCodeLoader.dll</HintPath>
+	    <HintPath>..\..\RemoteCodeLoader\RemoteCodeLoader\bin\Debug\net8.0-ios\RemoteCodeLoader.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 

@@ -203,11 +203,15 @@ public partial class CoinsView : ContentPage
         }
         else if (e.PropertyName == "IsCoinSelected")
         {
+            var maxHeight = InfoGrid.Height;
+            if (maxHeight >= 800)
+                maxHeight = 700;
+
             if (_coinsViewModel.IsCoinSelected)
             {
 				await InfoGrid.FadeTo(0, 150);
 
-				AnimateHeightRequest(Window.Height - 100, 400, 1000);
+				AnimateHeightRequest(Window.Height - 100, Window.Height - maxHeight - 150, 1000);
 				InfoGrid.IsVisible = true;
 				await InfoGrid.FadeTo(1, 350);
 
@@ -216,7 +220,7 @@ public partial class CoinsView : ContentPage
             {
 				await InfoGrid.FadeTo(0, 350);
                 InfoGrid.IsVisible = false;
-				AnimateHeightRequest(400, Window.Height - 100, 250);
+				AnimateHeightRequest(Window.Height - maxHeight - 150, Window.Height - 100, 250);
 			}
 
         }

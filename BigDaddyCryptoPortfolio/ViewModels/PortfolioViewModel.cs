@@ -4,6 +4,7 @@ using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Models.Ui;
+using BigDaddyCryptoPortfolio.Models.Ui.Graphics;
 using BigDaddyCryptoPortfolio.Shared;
 using System;
 using System.Collections.Generic;

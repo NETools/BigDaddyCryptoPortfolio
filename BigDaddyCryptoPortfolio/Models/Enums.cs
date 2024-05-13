@@ -60,4 +60,11 @@ namespace BigDaddyCryptoPortfolio.Models
 		Register,
 		Confirmation
 	}
+
+	public enum RetrievalType
+	{
+		Null,
+		Portfolio,
+		Transaction
+	}
 }

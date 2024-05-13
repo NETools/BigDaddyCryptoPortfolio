@@ -21,7 +21,9 @@ namespace BigDaddyCryptoPortfolio.Models.Ui
 			get => _coinId;
 			set
 			{
-				_coinId = value;
+                if (_coinId == value)
+                    return;
+                _coinId = value;
 				OnPropertyChanged();
 			}
 		}
@@ -32,7 +34,9 @@ namespace BigDaddyCryptoPortfolio.Models.Ui
 			get => _side;
 			set
 			{
-				_side = value;
+                if (_side == value)
+                    return;
+                _side = value;
 				OnPropertyChanged();
 			}
 		}
@@ -43,7 +47,9 @@ namespace BigDaddyCryptoPortfolio.Models.Ui
 			get => _dateTime;
 			set
 			{
-				_dateTime = value;
+                if (_dateTime == value)
+                    return;
+                _dateTime = value;
 				OnPropertyChanged();
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HoldingPeriod)));
 			}
@@ -55,7 +61,9 @@ namespace BigDaddyCryptoPortfolio.Models.Ui
 			get => _pricePerCoin;
 			set
 			{
-				_pricePerCoin = value;
+                if (_pricePerCoin == value)
+                    return;
+                _pricePerCoin = value;
 				OnPropertyChanged();
 			}
 		}
@@ -66,7 +74,9 @@ namespace BigDaddyCryptoPortfolio.Models.Ui
 			get => _amountEur;
 			set
 			{
-				_amountEur = value;
+                if (_amountEur == value)
+                    return;
+                _amountEur = value;
 				OnPropertyChanged();
 			}
 		}
@@ -77,12 +87,15 @@ namespace BigDaddyCryptoPortfolio.Models.Ui
 			get => _quantityCoins;
 			set
 			{
+				if (_quantityCoins == value)
+					return;
+
 				_quantityCoins = value;
 				OnPropertyChanged();
 			}
 		}
 
-		public string HoldingPeriod => (DateTime.Now - Date).Humanize();
+		public string HoldingPeriod => (DateTime.Now - Date).Humanize(minUnit: Humanizer.Localisation.TimeUnit.Day);
 
 		public event PropertyChangedEventHandler? PropertyChanged;
 

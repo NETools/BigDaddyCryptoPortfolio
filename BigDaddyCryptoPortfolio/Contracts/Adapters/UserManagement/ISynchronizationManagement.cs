@@ -12,7 +12,7 @@ namespace BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement
 {
     public interface ISynchronizationManagement<PushType, RetrieveType>
     {
-        public Task<ApiResult<RetrieveType>> Retrieve();
+        public Task<ApiResult<RetrieveType>> Retrieve(PushType data);
         public Task<ApiResult<bool>> Push(PushType data, TransactionType transactionType);
     }
 }
