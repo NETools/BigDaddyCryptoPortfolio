@@ -1,5 +1,6 @@
 using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
+using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Models.Ui;
 
 namespace BigDaddyCryptoPortfolio.Views;

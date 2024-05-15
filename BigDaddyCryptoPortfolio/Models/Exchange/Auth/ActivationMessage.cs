@@ -5,14 +5,13 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace BigDaddyCryptoPortfolio.Models.Dtos
+namespace BigDaddyCryptoPortfolio.Models.Exchange.Auth
 {
-    internal struct MessageBusRetrievalMessage
+    internal struct ActivationMessage
     {
         [JsonInclude]
-        public RetrievalType RetrievalType;
-        
+        public string Username;
         [JsonInclude]
-        public byte[] StructBuffer;
+        public Guid ActivationId;
     }
 }

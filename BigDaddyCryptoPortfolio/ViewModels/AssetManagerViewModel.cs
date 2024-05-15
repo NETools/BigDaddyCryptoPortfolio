@@ -1,6 +1,10 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model;
+using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Networking;
 using BigDaddyCryptoPortfolio.Adapters.API.Gecko;
+using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
+using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Dtos;
 using BigDaddyCryptoPortfolio.Models.Ui;
 using System;
 using System.Collections.Generic;
@@ -12,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.ViewModels
 {
-	internal class AssetManagerViewModel (IPortfolioViewModel portfolioViewModel) : IAssetManagerViewModel
+	internal class AssetManagerViewModel (IPortfolioViewModel portfolioViewModel, ISynchronizationManagement<MessageBusNotification, MessageBusRetrievalMessage> synchronizationManagement, IUserSession session) : IAssetManagerViewModel
 	{
 		public IPortfolioViewModel Portfolio { get; private set; } = portfolioViewModel;
 		public IDictionary<string, IList<Transaction>> Transactions { get; private set; } = new Dictionary<string, IList<Transaction>>();
@@ -35,7 +39,7 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         private Gecko _gecko = new Gecko("CG-XAPzMYbZ8Q8KoqGdwscqrr6f");
 		private SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        public void AddTransaction(TransactionSide side, DateTime date, double pricePerCoin, double amountInEur, double quantityCoins)
+        public async void AddTransaction(TransactionSide side, DateTime date, double pricePerCoin, double amountInEur, double quantityCoins)
 		{
 			if (SelectedCoin == null)
 				return;
@@ -55,7 +59,24 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 				QuantityCoins = quantityCoins
 			};
 
-            transaction.PropertyChanged += OnTransactionChanged;
+			var transactionDto = new TransactionDto()
+			{
+				Username = session.Username
+			};
+
+			transactionDto.CopyFrom(transaction);
+
+			var result = await synchronizationManagement.Push(new MessageBusNotification()
+			{
+				ChanneId = "PortfolioExchangeService",
+				GenericMessageType = GenericMessageType.UpdateTransactionMessage,
+				MessageId = "TransactionUpdate",
+				StructData = transactionDto.ToJsonBytes(Encoding.UTF8)
+			});
+
+	
+
+			transaction.PropertyChanged += OnTransactionChanged;
 
             Transactions[SelectedCoin.Id].Add(transaction);
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedCoinTransactions)));
@@ -137,6 +158,8 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         public async void SelectCoin(Coin? coin)
 		{
 			SelectedCoin = coin;
+
+			if (SelectedCoin == null) return;
 
             var result = await _gecko.Fetch(SelectedCoin.Id);
             if (!result)

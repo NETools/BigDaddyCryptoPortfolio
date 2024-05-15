@@ -1,4 +1,5 @@
 ﻿using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model;
+using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Models.Ui;
 using System;
 using System.Collections.Generic;

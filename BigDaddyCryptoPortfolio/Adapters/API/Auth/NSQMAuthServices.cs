@@ -3,6 +3,7 @@ using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
 using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Models.Api;
 using BigDaddyCryptoPortfolio.Models.Exchange;
+using BigDaddyCryptoPortfolio.Models.Exchange.Auth;
 using BigDaddyCryptoPortfolio.Shared;
 using NSQM.Core.Model;
 using NSQM.Core.Producer;

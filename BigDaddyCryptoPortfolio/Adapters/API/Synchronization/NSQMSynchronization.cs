@@ -23,8 +23,6 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Synchronization
 	{
 		private const string ServerPublicKey = "<RSAKeyValue><Modulus>tqfPpisNfHYJe3v2fBdMyvVtJWnimdK1rq+g3uKgNlYHFIfCIeLJ/gFcD8bcTRCgI8gSEzu48sGgnxzzSh/Gj7BSVrq2dTlFC5ma3z+t7khP5NYTT2JmlRgBi3plMM4rdqi8p47QWvzMojuut3wXsS+9XDnJ+0iVhw4XLcTs6kl28Y5z6z/GOzhC8W9XgPoJLWSr9kgNtTPIHzfIz9eaTvqA0np7iht6pzQxqJuhQKX7cGV3WztpijvT/KYdJrNXq+aAmra11I6i6rpHDJ9O2Sor7IFu2o/3vcsNTyxaYwCNvpCHNoQwqvSHgT91Io8xZdm/UJGMPeDAWEDHRYtSaguhe+43A/pCOaNzEtbyoEIUe+igq2iFUMi4ReEJvouv3piSlt16rjUgebic7+lHPuQDv3omIcM0mVHErceohfDxTAeTTAdL/S7tUOZ0rd9dm3jbFBE6rVDl79orjs6hKj8pQTWIv/BF51pFmIesNy0/Xc1rBXuH4ocF1Kzgkk7mZY5WrBkGoS77/uS/u8sMkVPCemUmS8szahIF0pcnb1hYPdVVuYeni9vL0eknUm1P30pWFaN9IPA4qzskCeu8I16RJO3q+u43wCxLxwbBvEhwxgKW6iZ68gnV2R/6LG8F1Z52n2taCFBKBEUITtnJQwocMCn2WJwKQKDUqCbJuPk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
-		private IUserSession _userSession;
-
 		private NSQMProducer _producer;
 		private Guid _id = Guid.NewGuid();
 
@@ -33,9 +31,8 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Synchronization
 
 		private bool _initSucceeded;
 
-		public NSQMSynchronization(IUserSession session, string host)
+		public NSQMSynchronization(string host)
 		{
-			_userSession = session;
 			_producer = new NSQMProducer(host, _id);
 			_producer.Mailbox += OnMailBox; ;
 
@@ -48,7 +45,7 @@ namespace BigDaddyCryptoPortfolio.Adapters.API.Synchronization
 			await connection.Accept(NSQM.Data.Extensions.AckType.Accepted);
 		}
 
-		public async Task<ApiResult<bool>> Push(MessageBusNotification data, TransactionType transactionType)
+		public async Task<ApiResult<bool>> Push(MessageBusNotification data)
 		{
 			if (!await InitConnection())
 			{

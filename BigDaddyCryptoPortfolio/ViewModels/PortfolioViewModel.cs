@@ -1,8 +1,11 @@
-﻿using BigDaddyCryptoPortfolio.Adapters.Maths;
+﻿using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Networking;
+using BigDaddyCryptoPortfolio.Adapters.Maths;
 using BigDaddyCryptoPortfolio.Contracts.Adapters;
 using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Models;
+using BigDaddyCryptoPortfolio.Models.Dtos;
+using BigDaddyCryptoPortfolio.Models.Exchange;
 using BigDaddyCryptoPortfolio.Models.Ui;
 using BigDaddyCryptoPortfolio.Models.Ui.Graphics;
 using BigDaddyCryptoPortfolio.Shared;
@@ -23,8 +26,9 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         private bool _isDirty = true;
         private double _lastScore;
 
-        private ISynchronizationManagement<string, List<string>> _synchronizationManagement;
+        private ISynchronizationManagement<MessageBusNotification, MessageBusRetrievalMessage> _synchronizationManagement;
         private ICoinDataProvider _coinDataProvider;
+        private IUserSession _session;
 
         private Dictionary<CoinCategory, int> _categoryIndex = new Dictionary<CoinCategory, int>()
         {
@@ -97,11 +101,12 @@ namespace BigDaddyCryptoPortfolio.ViewModels
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
 		public event Action<Coin> CoinRemoved;
 
-		public PortfolioViewModel(ICoinDataProvider coinDataProvider, ISynchronizationManagement<string, List<string>> synchronizationManagement)
+		public PortfolioViewModel(ICoinDataProvider coinDataProvider, IUserSession userSession, ISynchronizationManagement<MessageBusNotification, MessageBusRetrievalMessage> synchronizationManagement)
         {
             _synchronizationManagement = synchronizationManagement;
 			_coinDataProvider = coinDataProvider;
             _scoreCalculation = new ScoreCalculationAdapter(this);
+            _session = userSession;
 
             for (int i = 0; i < AllocationFullfillmentsIndicator.Length; i++)
             {
@@ -260,7 +265,18 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
             if (makeApiCall)
             {
-                await _synchronizationManagement.Push(coin.Symbol, TransactionType.Add);
+                await _synchronizationManagement.Push(new MessageBusNotification()
+                {
+                    ChanneId = "PortfolioExchangeService",
+                    MessageId = "UpdatePortfolio",
+                    StructData = new UpdatePortfolioMessage()
+                    {
+                        CoinId = coin.Symbol,
+                        Action = TransactionType.Add,
+                        Username = _session.Username
+                    }.ToJsonBytes(Encoding.UTF8),
+                    GenericMessageType = GenericMessageType.UpdatePortfolioMessage
+                });
             }
 
             TotalCointCount++;
@@ -282,8 +298,19 @@ namespace BigDaddyCryptoPortfolio.ViewModels
 
             if (makeApiCall)
             {
-                await _synchronizationManagement.Push(coin.Symbol, TransactionType.Remove);
-            }
+				await _synchronizationManagement.Push(new MessageBusNotification()
+				{
+					ChanneId = "PortfolioExchangeService",
+					MessageId = "UpdatePortfolio",
+					StructData = new UpdatePortfolioMessage()
+					{
+						CoinId = coin.Symbol,
+						Action = TransactionType.Remove,
+						Username = _session.Username
+					}.ToJsonBytes(Encoding.UTF8),
+					GenericMessageType = GenericMessageType.UpdatePortfolioMessage
+				});
+			}
 			TotalCointCount--;
         }
     }

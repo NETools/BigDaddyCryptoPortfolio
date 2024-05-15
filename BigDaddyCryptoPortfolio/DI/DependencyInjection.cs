@@ -40,14 +40,13 @@ namespace BigDaddyCryptoPortfolio.DI
 
 			appBuilder.Services.AddSingleton<IUserManagement, NSQMAuthServices>((services) =>
 			{
-				var authServices = new NSQMAuthServices("192.168.2.76:8000");
+				var authServices = new NSQMAuthServices("192.168.0.100:8000");
 				return authServices;
 			});
 
 			appBuilder.Services.AddSingleton<ISynchronizationManagement<MessageBusNotification, MessageBusRetrievalMessage>, NSQMSynchronization>((services) =>
 			{
-				var userSession = services.GetService<IUserSession>();
-				return new NSQMSynchronization(userSession, "192.168.2.76:8000");
+				return new NSQMSynchronization("192.168.0.100:8000");
 			});
 
 			appBuilder.Services.AddSingleton<IUserSession, UserSession>();

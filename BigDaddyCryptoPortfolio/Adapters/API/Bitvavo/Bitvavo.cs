@@ -7,6 +7,7 @@ using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Commands;
 using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Price;
 using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Model.Trade;
 using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Networking;
+using BigDaddyCryptoPortfolio.Models;
 using BigDaddyCryptoPortfolio.Shared;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;

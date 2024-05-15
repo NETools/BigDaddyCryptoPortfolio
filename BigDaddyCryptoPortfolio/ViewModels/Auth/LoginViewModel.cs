@@ -1,14 +1,17 @@
-﻿using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
+﻿using BigDaddyCryptoPortfolio.Adapters.API.Bitvavo.Networking;
+using BigDaddyCryptoPortfolio.Contracts.Adapters.UserManagement;
 using BigDaddyCryptoPortfolio.Contracts.AppControls;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels;
 using BigDaddyCryptoPortfolio.Contracts.ViewModels.Auth;
 using BigDaddyCryptoPortfolio.Models.Dtos;
+using BigDaddyCryptoPortfolio.Models.Exchange;
 using BigDaddyCryptoPortfolio.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace BigDaddyCryptoPortfolio.ViewModels.Auth
@@ -53,13 +56,27 @@ namespace BigDaddyCryptoPortfolio.ViewModels.Auth
 
 				var response = await synchronizationManagement.Retrieve(new MessageBusNotification()
 				{
-					
+					ChanneId = "PortfolioExchangeService",
+					MessageId = "RetrievePortfolio",
+					StructData = new RetrievePortfolioMessage()
+					{
+						Username = Email
+					}.ToJsonBytes(Encoding.UTF8),
+					GenericMessageType = Models.GenericMessageType.RetrievePortfolio
 				});
-				foreach (var symbol in response.Result)
+
+				if(response.Result.RetrievalType != Models.RetrievalType.Portfolio)
+				{
+					throw new InvalidOperationException("Something went wrong!");
+				}
+
+				var jsonString = Encoding.UTF8.GetString(response.Result.StructBuffer);
+				var symbols = JsonSerializer.Deserialize<List<string>>(jsonString);
+
+				foreach (var symbol in symbols)
 				{
 					await coinsViewModel.AddCoin(symbol, false);
 				}
-
 
 				context.Prepare();
 			}

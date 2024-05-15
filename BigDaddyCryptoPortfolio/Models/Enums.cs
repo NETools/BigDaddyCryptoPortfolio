@@ -67,4 +67,30 @@ namespace BigDaddyCryptoPortfolio.Models
 		Portfolio,
 		Transaction
 	}
+
+	public enum BitvavoApiType
+	{
+		REST,
+		WebSockets
+	}
+
+	public enum LoggingType
+	{
+		Info,
+		Error,
+		Warning
+	}
+
+	public enum WebsocketResponseCodes
+	{
+		Auth = 100,
+		Ticker = 110,
+		Balance = 120,
+	}
+
+	public enum TransactionSide
+	{
+		Buy,
+		Sell
+	}
 }

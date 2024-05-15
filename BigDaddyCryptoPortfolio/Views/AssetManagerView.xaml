@@ -183,7 +183,7 @@
 
             </Grid>
 
-            <Grid RowDefinitions="*,*" Padding="10">
+            <Grid RowDefinitions="*" Padding="10">
                 <Border BackgroundColor="#202530" Grid.RowSpan="2" Stroke="Transparent">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="20"/>
@@ -272,87 +272,6 @@
 
                         </VerticalStackLayout>
                     </ScrollView>
-
-                    <ScrollView Orientation="Both" Grid.Column="1">
-                        <VerticalStackLayout Spacing="5">
-                            <Grid ColumnDefinitions="250,250,250" RowDefinitions="250,250" Margin="10">
-                                <Border BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="25"/>
-                                    </Border.StrokeShape>
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="Bestand" FontSize="Caption"/>
-                                        <Label Text="{Binding SelectedCoinTransactionsHistory.TotalStocks, StringFormat='{0} €'}" FontSize="Large"/>
-                                        <Label Text="{Binding SelectedCoinTransactionsHistory.TotalCountReadable}" FontSize="Caption"/>
-                                    </VerticalStackLayout>
-
-                                </Border>
-
-                                <Border Grid.Column="1" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="25"/>
-                                    </Border.StrokeShape>
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="Investiert" FontSize="Caption"/>
-                                        <Label Text="{Binding SelectedCoinTransactionsHistory.TotalInvestments, StringFormat='{0} €'}" FontSize="Large"/>
-                                    </VerticalStackLayout>
-
-                                </Border>
-
-                                <Border Grid.Column="2" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="25"/>
-                                    </Border.StrokeShape>
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="Gesamtgewinn/-Verlust" FontSize="Caption"/>
-                                        <Label Text="{Binding SelectedCoinTransactionsHistory.TotalProfit, StringFormat='{0} €'}" FontSize="Large"/>
-                                        <Label Text="--" FontSize="Caption"/>
-                                    </VerticalStackLayout>
-
-                                </Border>
-
-                                <Border Grid.Row="1" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="25"/>
-                                    </Border.StrokeShape>
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="Durchschn. Kaufpreis" FontSize="Caption"/>
-                                        <Label Text="{Binding SelectedCoinTransactionsHistory.AveragePurchasePrice, StringFormat='{0} €'}" FontSize="Large"/>
-                                        <Label Text="--" FontSize="Caption"/>
-                                    </VerticalStackLayout>
-
-                                </Border>
-
-                                <Border Grid.Row="1" Grid.Column="1" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="25"/>
-                                    </Border.StrokeShape>
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="Durchschn. Verkaufspreis" FontSize="Caption"/>
-                                        <Label Text="{Binding SelectedCoinTransactionsHistory.AverageSellPrice, StringFormat='{0} €'}" FontSize="Large"/>
-                                        <Label Text="--" FontSize="Caption"/>
-                                    </VerticalStackLayout>
-
-                                </Border>
-
-                                <Border Grid.Row="1" Grid.Column="2" BackgroundColor="#1f212e" Stroke="Transparent" Padding="50" >
-                                    <Border.StrokeShape>
-                                        <RoundRectangle CornerRadius="25"/>
-                                    </Border.StrokeShape>
-                                    <VerticalStackLayout Spacing="5">
-                                        <Label Text="Gewinn realisiert" FontSize="Caption"/>
-                                        <Label Text="{Binding SelectedCoinTransactionsHistory.RealizedProfit, StringFormat='{0} €'}" FontSize="Large"/>
-                                        <Label Text="% von Invest" FontSize="Caption"/>
-                                    </VerticalStackLayout>
-
-                                </Border>
-
-                            </Grid>
-
-
-                        </VerticalStackLayout>
-                    </ScrollView>
-
                 </Grid>
                 
             </Grid>
